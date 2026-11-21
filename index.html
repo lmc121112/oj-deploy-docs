@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Online Judge Open-Source — Tài liệu Triển khai (Deploy Guide)</title>
+  <style>
+    :root {
+      --bg-page: #f1f5f9;
+      --bg-card: #ffffff;
+      --bg-code: #0f172a;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --success: #16a34a;
+      --warning-bg: #fefce8;
+      --warning-border: #fde047;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.65;
+    }
+
+    header {
+      background-color: #1e293b;
+      color: #fff;
+      padding: 32px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 8px 0;
+      font-size: 26px;
+    }
+
+    header p {
+      margin: 0 0 16px 0;
+      color: #cbd5e1;
+      font-size: 15px;
+    }
+
+    .header-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .header-btn {
+      display: inline-block;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .header-btn:hover {
+      background: rgba(255, 255, 255, 0.24);
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 28px auto;
+      padding: 0 16px 48px 16px;
+      display: grid;
+      gap: 24px;
+    }
+
+    .toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 22px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .toc h2 {
+      margin: 0 0 10px 0;
+      font-size: 16px;
+    }
+
+    .toc ul {
+      margin: 0;
+      padding-left: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 6px;
+      font-size: 14px;
+    }
+
+    .toc a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .toc a:hover { text-decoration: underline; }
+
+    section.card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    section.card h2 {
+      margin-top: 0;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--border);
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      background: var(--primary);
+      color: #fff;
+      font-size: 12px;
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-weight: bold;
+    }
+
+    h3 {
+      margin: 18px 0 8px 0;
+      font-size: 16px;
+      color: #1e293b;
+    }
+
+    .code-wrapper {
+      position: relative;
+      margin: 10px 0 16px 0;
+    }
+
+    pre {
+      margin: 0;
+      background: var(--bg-code);
+      color: #f8fafc;
+      padding: 14px 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: Consolas, Monaco, 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 5px;
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .copy-btn:hover { background: rgba(255, 255, 255, 0.25); }
+
+    .note {
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-border);
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin: 12px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 9px 12px;
+      text-align: left;
+    }
+
+    th { background: #f8fafc; }
+
+    code.inline {
+      background: #e2e8f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 13px;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      padding-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>⚡ Online Judge Open-Source — Tài liệu Triển khai</h1>
+    <p>Hướng dẫn tự dựng trọn bộ hệ thống chấm bài trực tuyến (Supabase + Next.js + C++ Judge Core)</p>
+    <div class="header-actions">
+      <a class="header-btn" href="./schema.sql" download>⬇️ Tải file schema.sql</a>
+      <a class="header-btn" href="./oj-judge.service" download>⬇️ Tải file oj-judge.service</a>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <nav class="toc">
+      <h2>📌 Mục lục triển khai</h2>
+      <ul>
+        <li><a href="#arch">1. Kiến trúc tổng quan 3 thành phần</a></li>
+        <li><a href="#supabase">2. Khởi tạo Database trên Supabase</a></li>
+        <li><a href="#webapp">3. Triển khai Giao diện Web (Next.js / Vercel)</a></li>
+        <li><a href="#judgecore">4. Cài đặt Máy chấm C++ Judge Core (Linux VPS)</a></li>
+        <li><a href="#systemd">5. Chạy ngầm tự động với Systemd</a></li>
+        <li><a href="#checklist">6. Kiểm thử sau khi triển khai</a></li>
+      </ul>
+    </nav>
+
+    <section id="arch" class="card">
+      <h2><span class="badge">Bước 1</span> Kiến trúc tổng quan hệ thống</h2>
+      <p>Hệ thống gồm 3 thành phần tách rời, giao tiếp qua PostgreSQL (Supabase):</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Thành phần</th>
+            <th>Công nghệ</th>
+            <th>Nơi triển khai đề xuất</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Database &amp; RPC</b></td>
+            <td>Supabase (PostgreSQL)</td>
+            <td>Supabase Cloud (Free Tier)</td>
+          </tr>
+          <tr>
+            <td><b>Web Frontend (<code class="inline">oj-web-app</code>)</b></td>
+            <td>Next.js (App Router), React, Ace Editor</td>
+            <td>Vercel / Netlify / Node.js Server</td>
+          </tr>
+          <tr>
+            <td><b>Judge Worker (<code class="inline">oj-judge-core</code>)</b></td>
+            <td>C++17 (<code class="inline">libcurl</code>, <code class="inline">nlohmann-json</code>, Linux Sandbox)</td>
+            <td>Ubuntu / Debian VPS (22.04 / 24.04)</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="supabase" class="card">
+      <h2><span class="badge">Bước 2</span> Khởi tạo Database trên Supabase</h2>
+      <p>Đăng nhập <b>Supabase Dashboard</b> → tạo Project mới → mở <b>SQL Editor</b> → dán toàn bộ nội dung file <a href="./schema.sql">schema.sql</a> bên dưới và bấm <b>Run</b>:</p>
+
+      <div class="code-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy SQL</button>
+        <pre>-- 1. Bảng người dùng
+CREATE TABLE IF NOT EXISTS public.users (
+  id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  username TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'user',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 2. Bảng kỳ thi (Contests)
+CREATE TABLE IF NOT EXISTS public.contests (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  start_time TIMESTAMPTZ NOT NULL,
+  end_time TIMESTAMPTZ NOT NULL,
+  restrict_users BOOLEAN DEFAULT FALSE,
+  allowed_users TEXT[] DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 3. Bảng đề bài (Problems)
+CREATE TABLE IF NOT EXISTS public.problems (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  statement TEXT DEFAULT '',
+  time_limit_ms INT DEFAULT 1000,
+  memory_limit_mb INT DEFAULT 256,
+  contest_id TEXT REFERENCES public.contests(id) ON DELETE SET NULL,
+  problem_order INT DEFAULT 1,
+  io_mode TEXT DEFAULT 'stdio',
+  io_filename TEXT DEFAULT '',
+  hide_tests BOOLEAN DEFAULT FALSE,
+  hide_grading BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 4. Bảng bộ test (Test Cases)
+CREATE TABLE IF NOT EXISTS public.test_cases (
+  id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  problem_id TEXT REFERENCES public.problems(id) ON DELETE CASCADE,
+  test_order INT NOT NULL DEFAULT 1,
+  input_data TEXT NOT NULL,
+  expected_output TEXT NOT NULL
+);
+
+-- 5. Bảng lịch sử bài nộp (Submissions)
+CREATE TABLE IF NOT EXISTS public.submissions (
+  id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  problem_id TEXT REFERENCES public.problems(id) ON DELETE CASCADE,
+  username TEXT NOT NULL,
+  language TEXT NOT NULL,
+  source_code TEXT NOT NULL,
+  status TEXT DEFAULT 'Pending',
+  verdict TEXT DEFAULT '',
+  exec_time_ms INT DEFAULT 0,
+  memory_kb INT DEFAULT 0,
+  compile_message TEXT DEFAULT '',
+  test_results JSONB DEFAULT '[]'::jsonb,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 6. Bảng Template code mặc định theo ngôn ngữ
+CREATE TABLE IF NOT EXISTS public.language_templates (
+  id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  language TEXT UNIQUE NOT NULL,
+  display_name TEXT NOT NULL,
+  template_code TEXT NOT NULL
+);
+
+-- Dữ liệu mẫu ban đầu
+INSERT INTO public.language_templates (language, display_name, template_code) VALUES
+('cpp20', 'C++20 (GCC)', E'#include &lt;bits/stdc++.h&gt;\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n    \n    return 0;\n}\n'),
+('python', 'Python 3', E'import sys\n\ndef solve():\n    pass\n\nif __name__ == "__main__":\n    solve()\n'),
+('java', 'Java 17', E'import java.util.*;\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        Scanner sc = new Scanner(System.in);\n    }\n}\n'),
+('csharp', 'C# (.NET 8)', E'using System;\n\nclass Program {\n    static void Main() {\n    }\n}\n'),
+('rust', 'Rust', E'use std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n}\n')
+ON CONFLICT (language) DO NOTHING;
+
+INSERT INTO public.problems (id, title, statement, time_limit_ms, memory_limit_mb, problem_order)
+VALUES ('aplusb', 'Tổng hai số nguyên A + B', 'Cho hai số nguyên A và B. Tính tổng A + B.', 1000, 256, 1)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.test_cases (problem_id, test_order, input_data, expected_output)
+VALUES ('aplusb', 1, '1 2', '3'), ('aplusb', 2, '100 250', '350');
+
+-- Hàm RPC phục vụ chức năng Reset toàn bộ OJ trong trang Admin
+CREATE OR REPLACE FUNCTION public.reset_entire_oj()
+RETURNS VOID
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+  TRUNCATE TABLE public.submissions, public.test_cases, public.problems, public.contests, public.users RESTART IDENTITY CASCADE;
+
+  INSERT INTO public.problems (id, title, statement, time_limit_ms, memory_limit_mb, problem_order)
+  VALUES ('aplusb', 'Tổng hai số nguyên A + B', 'Cho hai số nguyên A và B. Tính tổng A + B.', 1000, 256, 1);
+
+  INSERT INTO public.test_cases (problem_id, test_order, input_data, expected_output)
+  VALUES ('aplusb', 1, '1 2', '3'), ('aplusb', 2, '100 250', '350');
+END;
+$$;</pre>
+      </div>
+
+      <div class="note">
+        <b>Lưu ý API Keys:</b> Vào <b>Project Settings → API</b> để lấy <code class="inline">Project URL</code>, <code class="inline">anon public key</code> (cho Web App) và <code class="inline">service_role key</code> (cho C++ Judge Core).
+      </div>
+    </section>
+
+    <section id="webapp" class="card">
+      <h2><span class="badge">Bước 3</span> Triển khai Giao diện Web (<code class="inline">oj-web-app</code>)</h2>
+
+      <h3>3.1. Chạy thử trên máy cá nhân (Local)</h3>
+      <div class="code-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>git clone &lt;link-repo-oj-web-app&gt;
+cd oj-web-app
+npm install
+
+cat &lt;&lt;EOF &gt; .env.local
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-public-key
+EOF
+
+npm run dev</pre>
+      </div>
+
+      <h3>3.2. Đưa lên Internet miễn phí với Vercel</h3>
+      <ol>
+        <li>Đẩy mã nguồn <code class="inline">oj-web-app</code> lên GitHub repository.</li>
+        <li>Truy cập <b>vercel.com</b> → chọn <b>Add New Project</b> → Import repository.</li>
+        <li>Trong <b>Environment Variables</b>, thêm <code class="inline">NEXT_PUBLIC_SUPABASE_URL</code> và <code class="inline">NEXT_PUBLIC_SUPABASE_ANON_KEY</code>.</li>
+        <li>Bấm <b>Deploy</b> để nhận tên miền hoạt động.</li>
+      </ol>
+    </section>
+
+    <section id="judgecore" class="card">
+      <h2><span class="badge">Bước 4</span> Cài đặt Máy chấm C++ Judge Core (Linux VPS)</h2>
+      <p>Khuyên dùng máy chủ Linux (Ubuntu 22.04 / 24.04) để cô lập tiến trình sandbox và giới hạn bộ nhớ/thời gian chính xác.</p>
+
+      <h3>4.1. Cài đặt trình biên dịch và thư viện</h3>
+      <div class="code-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>sudo apt update
+sudo apt install -y g++ make cmake libcurl4-openssl-dev nlohmann-json3-dev \
+  python3 openjdk-17-jdk dotnet-sdk-8.0 rustc fp-compiler</pre>
+      </div>
+
+      <h3>4.2. Cấu hình và biên dịch <code class="inline">judge.cpp</code></h3>
+      <div class="code-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>git clone &lt;link-repo-oj-judge-core&gt;
+cd oj-judge-core
+
+cat &lt;&lt;EOF &gt; .env
+SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_SERVICE_KEY=your-service-role-key
+EOF
+
+g++ -O3 -std=c++17 judge.cpp -o judge -lcurl -pthread
+./judge</pre>
+      </div>
+    </section>
+
+    <section id="systemd" class="card">
+      <h2><span class="badge">Bước 5</span> Chạy ngầm 24/7 với Systemd Service</h2>
+      <p>Cài đặt service để trình chấm tự khởi động lại khi VPS khởi động lại hoặc gặp sự cố mạng:</p>
+
+      <div class="code-wrapper">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>sudo tee /etc/systemd/system/oj-judge.service &gt; /dev/null &lt;&lt;EOF
+[Unit]
+Description=Online Judge C++ Core Worker
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/oj-judge-core
+ExecStart=/root/oj-judge-core/judge
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable oj-judge
+sudo systemctl start oj-judge
+sudo journalctl -u oj-judge -f</pre>
+      </div>
+    </section>
+
+    <section id="checklist" class="card">
+      <h2><span class="badge">Bước 6</span> Kiểm thử sau khi triển khai</h2>
+      <ul>
+        <li><b>Khởi tạo Admin đầu tiên:</b> Đăng ký tài khoản đầu tiên trên Web → vào bảng <code class="inline">users</code> trên Supabase đổi cột <code class="inline">role</code> thành <code class="inline">admin</code>.</li>
+        <li><b>Kiểm thử luồng chuẩn (<code class="inline">stdin/stdout</code>):</b> Nộp thử bài mẫu <code class="inline">aplusb</code> bằng C++ và Python để xác nhận verdict <b>AC</b>.</li>
+        <li><b>Kiểm thử File I/O (<code class="inline">.in/.out</code>):</b> Tạo 1 bài chọn chế độ File I/O, nộp code dùng <code class="inline">freopen</code> để kiểm tra trình chấm tự dọn sandbox.</li>
+        <li><b>Kiểm thử Contest &amp; OI Mode:</b> Tạo Contest bắt đầu ngay, nhân bản bài từ Luyện tập tự do vào Contest và kiểm tra tính năng ẩn kết quả trong giờ thi.</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer>
+    Online Judge Open-Source Documentation • MIT License
+  </footer>
+
+  <script>
+    function copyCode(btn) {
+      const pre = btn.parentElement.querySelector('pre');
+      navigator.clipboard.writeText(pre.innerText).then(() => {
+        const original = btn.innerText;
+        btn.innerText = 'Đã copy!';
+        btn.style.background = '#16a34a';
+        setTimeout(() => {
+          btn.innerText = original;
+          btn.style.background = '';
+        }, 1800);
+      });
+    }
+  </script>
+</body>
+</html>
