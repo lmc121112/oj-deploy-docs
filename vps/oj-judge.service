@@ -1,0 +1,17 @@
+[Unit]
+Description=Online Judge C++ Sandbox Worker Service (VPS Mode)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/oj-judge
+EnvironmentFile=/opt/oj-judge/.env
+ExecStart=/opt/oj-judge/worker-vps.sh
+Restart=always
+RestartSec=2
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
