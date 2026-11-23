@@ -3,184 +3,180 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Online Judge Open-Source — Tài liệu Triển khai (Deploy Guide)</title>
+  <title>Hướng dẫn Triển khai Hệ thống Online Judge (GitHub Actions &amp; VPS)</title>
   <style>
     :root {
-      --bg-page: #f1f5f9;
-      --bg-card: #ffffff;
-      --bg-code: #0f172a;
-      --text-main: #0f172a;
-      --text-muted: #475569;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
       --border: #e2e8f0;
       --primary: #2563eb;
-      --success: #16a34a;
-      --warning-bg: #fefce8;
-      --warning-border: #fde047;
+      --vps-accent: #059669;
+      --precompute: #7c3aed;
+      --code-bg: #1e293b;
+      --code-text: #f8fafc;
+      --warn-bg: #fef2f2;
+      --warn-border: #ef4444;
+      --ok-bg: #f0fdf4;
+      --ok-border: #22c55e;
+      --purple-bg: #f5f3ff;
+      --purple-border: #7c3aed;
     }
-
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background-color: var(--bg-page);
-      color: var(--text-main);
+      background: var(--bg);
+      color: var(--text);
       line-height: 1.65;
     }
-
     header {
-      background-color: #1e293b;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
       color: #fff;
-      padding: 32px 20px;
+      padding: 40px 20px 56px;
       text-align: center;
     }
+    header h1 { margin: 0 0 10px; font-size: 28px; }
+    header p { margin: 0 auto; max-width: 740px; color: #cbd5e1; font-size: 15px; }
 
-    header h1 {
-      margin: 0 0 8px 0;
-      font-size: 26px;
+    .tab-wrapper {
+      max-width: 940px;
+      margin: -28px auto 24px;
+      padding: 0 16px;
     }
-
-    header p {
-      margin: 0 0 16px 0;
-      color: #cbd5e1;
+    .tab-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: #fff;
+      padding: 6px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+      border: 1px solid var(--border);
+      gap: 6px;
+    }
+    .tab-btn {
+      border: none;
+      background: transparent;
+      padding: 14px 18px;
+      border-radius: 8px;
       font-size: 15px;
-    }
-
-    .header-actions {
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
       display: flex;
+      align-items: center;
       justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
+      gap: 8px;
     }
-
-    .header-btn {
-      display: inline-block;
-      padding: 7px 14px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 600;
-      text-decoration: none;
+    .tab-btn:hover { background: #f1f5f9; color: var(--text); }
+    .tab-btn.active-actions {
+      background: var(--primary);
       color: #fff;
-      background: rgba(255, 255, 255, 0.14);
-      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
     }
-
-    .header-btn:hover {
-      background: rgba(255, 255, 255, 0.24);
+    .tab-btn.active-vps {
+      background: var(--vps-accent);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(5, 150, 105, 0.35);
     }
 
     .container {
-      max-width: 980px;
-      margin: 28px auto;
-      padding: 0 16px 48px 16px;
-      display: grid;
-      gap: 24px;
+      max-width: 940px;
+      margin: 0 auto;
+      padding: 0 16px 48px;
     }
+    .tab-panel { display: none; gap: 22px; }
+    .tab-panel.active { display: grid; }
 
-    .toc {
-      background: var(--bg-card);
+    .step-card {
+      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 18px 22px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      border-radius: 12px;
+      padding: 24px 28px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
-
-    .toc h2 {
-      margin: 0 0 10px 0;
-      font-size: 16px;
-    }
-
-    .toc ul {
-      margin: 0;
-      padding-left: 20px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 6px;
-      font-size: 14px;
-    }
-
-    .toc a {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .toc a:hover { text-decoration: underline; }
-
-    section.card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 24px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-    }
-
-    section.card h2 {
-      margin-top: 0;
-      padding-bottom: 10px;
-      border-bottom: 2px solid var(--border);
-      font-size: 20px;
+    .step-header {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
     }
-
     .badge {
       background: var(--primary);
       color: #fff;
-      font-size: 12px;
-      padding: 2px 9px;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 4px 12px;
       border-radius: 999px;
-      font-weight: bold;
+      white-space: nowrap;
     }
+    .badge.vps { background: var(--vps-accent); }
+    .badge.precompute { background: var(--precompute); }
+    h2 { margin: 0; font-size: 20px; }
+    h3 { margin: 16px 0 8px; font-size: 16px; color: #1e293b; }
+    ul, ol { padding-left: 22px; margin: 10px 0; }
+    li { margin-bottom: 6px; }
 
-    h3 {
-      margin: 18px 0 8px 0;
-      font-size: 16px;
-      color: #1e293b;
-    }
-
-    .code-wrapper {
-      position: relative;
-      margin: 10px 0 16px 0;
-    }
-
+    .code-wrap { position: relative; margin: 10px 0; }
     pre {
-      margin: 0;
-      background: var(--bg-code);
-      color: #f8fafc;
+      background: var(--code-bg);
+      color: var(--code-text);
       padding: 14px 16px;
       border-radius: 8px;
       overflow-x: auto;
-      font-family: Consolas, Monaco, 'Courier New', monospace;
       font-size: 13px;
       line-height: 1.5;
+      margin: 0;
     }
-
     .copy-btn {
       position: absolute;
       top: 8px;
       right: 8px;
       background: rgba(255, 255, 255, 0.14);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      border-radius: 5px;
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
       padding: 4px 10px;
       font-size: 12px;
       cursor: pointer;
-      font-weight: 600;
     }
-
     .copy-btn:hover { background: rgba(255, 255, 255, 0.25); }
-
-    .note {
-      background: var(--warning-bg);
-      border: 1px solid var(--warning-border);
-      padding: 12px 14px;
-      border-radius: 8px;
-      font-size: 14px;
-      margin: 12px 0;
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: #e2e8f0;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
     }
+    pre code { background: transparent; color: inherit; padding: 0; }
+
+    .file-link {
+      display: inline-block;
+      background: #eff6ff;
+      color: var(--primary);
+      border: 1px solid #bfdbfe;
+      padding: 3px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .file-link:hover { background: #dbeafe; }
+
+    .callout {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin: 14px 0 0;
+      font-size: 14px;
+      border-left: 4px solid;
+    }
+    .callout.warn { background: var(--warn-bg); border-color: var(--warn-border); }
+    .callout.ok { background: var(--ok-bg); border-color: var(--ok-border); }
+    .callout.purple { background: var(--purple-bg); border-color: var(--purple-border); }
 
     table {
       width: 100%;
@@ -188,315 +184,310 @@
       margin: 12px 0;
       font-size: 14px;
     }
-
     th, td {
       border: 1px solid var(--border);
-      padding: 9px 12px;
+      padding: 10px 12px;
       text-align: left;
     }
-
-    th { background: #f8fafc; }
-
-    code.inline {
-      background: #e2e8f0;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: Consolas, Monaco, monospace;
-      font-size: 13px;
-    }
-
+    th { background: #f1f5f9; }
     footer {
       text-align: center;
-      color: var(--text-muted);
+      color: var(--muted);
       font-size: 13px;
-      padding-bottom: 24px;
+      padding: 20px;
+      border-top: 1px solid var(--border);
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>⚡ Online Judge Open-Source — Tài liệu Triển khai</h1>
-    <p>Hướng dẫn tự dựng trọn bộ hệ thống chấm bài trực tuyến (Supabase + Next.js + C++ Judge Core)</p>
-    <div class="header-actions">
-      <a class="header-btn" href="./schema.sql" download>⬇️ Tải file schema.sql</a>
-      <a class="header-btn" href="./oj-judge.service" download>⬇️ Tải file oj-judge.service</a>
-    </div>
-  </header>
+<header>
+  <h1>⚡ Hướng dẫn Triển khai Hệ thống Online Judge</h1>
+  <p>Chọn môi trường máy chấm bên dưới để xem hướng dẫn cài đặt đầy đủ cho <strong>Ubuntu 24.04 LTS (Noble Numbat)</strong>.</p>
+</header>
 
-  <main class="container">
+<div class="tab-wrapper">
+  <div class="tab-bar" role="tablist">
+    <button type="button" id="btn-actions" class="tab-btn active-actions" onclick="switchTab('actions')">
+      🚀 Phiên bản 1: GitHub Actions (Serverless)
+    </button>
+    <button type="button" id="btn-vps" class="tab-btn" onclick="switchTab('vps')">
+      🖥️ Phiên bản 2: VPS Linux (Systemd Service)
+    </button>
+  </div>
+</div>
 
-    <nav class="toc">
-      <h2>📌 Mục lục triển khai</h2>
-      <ul>
-        <li><a href="#arch">1. Kiến trúc tổng quan 3 thành phần</a></li>
-        <li><a href="#supabase">2. Khởi tạo Database trên Supabase</a></li>
-        <li><a href="#webapp">3. Triển khai Giao diện Web (Next.js / Vercel)</a></li>
-        <li><a href="#judgecore">4. Cài đặt Máy chấm C++ Judge Core (Linux VPS)</a></li>
-        <li><a href="#systemd">5. Chạy ngầm tự động với Systemd</a></li>
-        <li><a href="#checklist">6. Kiểm thử sau khi triển khai</a></li>
-      </ul>
-    </nav>
+<main class="container">
 
-    <section id="arch" class="card">
-      <h2><span class="badge">Bước 1</span> Kiến trúc tổng quan hệ thống</h2>
-      <p>Hệ thống gồm 3 thành phần tách rời, giao tiếp qua PostgreSQL (Supabase):</p>
+  <!-- ====================================================================== -->
+  <!-- TAB 1: HƯỚNG DẪN RIÊNG CHO GITHUB ACTIONS                              -->
+  <!-- ====================================================================== -->
+  <div id="panel-actions" class="tab-panel active">
+
+    <section class="step-card">
+      <div class="step-header">
+        <span class="badge">Tổng quan</span>
+        <h2>Kiến trúc GitHub Actions (Serverless + Precompute)</h2>
+      </div>
+      <p>Hệ thống áp dụng kỹ thuật <strong>Precompute</strong>: đóng gói sẵn sandbox <code>isolate</code> và trình chấm <code>judge.cpp</code> vào thư mục <code>vendor/</code> trên <strong>Ubuntu 24.04 (Noble Numbat)</strong>. Nhờ đó, mỗi lần thí sinh nộp bài, máy ảo GitHub Actions chỉ mất <strong>&lt; 1 giây</strong> để cài đặt môi trường thay vì phải <code>apt-get</code> và biên dịch lại từ đầu.</p>
       <table>
         <thead>
-          <tr>
-            <th>Thành phần</th>
-            <th>Công nghệ</th>
-            <th>Nơi triển khai đề xuất</th>
-          </tr>
+          <tr><th>Thành phần</th><th>Tệp cấu hình trong repo</th></tr>
         </thead>
         <tbody>
-          <tr>
-            <td><b>Database &amp; RPC</b></td>
-            <td>Supabase (PostgreSQL)</td>
-            <td>Supabase Cloud (Free Tier)</td>
-          </tr>
-          <tr>
-            <td><b>Web Frontend (<code class="inline">oj-web-app</code>)</b></td>
-            <td>Next.js (App Router), React, Ace Editor</td>
-            <td>Vercel / Netlify / Node.js Server</td>
-          </tr>
-          <tr>
-            <td><b>Judge Worker (<code class="inline">oj-judge-core</code>)</b></td>
-            <td>C++17 (<code class="inline">libcurl</code>, <code class="inline">nlohmann-json</code>, Linux Sandbox)</td>
-            <td>Ubuntu / Debian VPS (22.04 / 24.04)</td>
-          </tr>
+          <tr><td>Database Schema</td><td><a class="file-link" href="actions/schema-actions.sql" download>actions/schema-actions.sql</a></td></tr>
+          <tr><td>Workflow Precompute (chạy 1 lần)</td><td><a class="file-link" href="actions/build-vendor.yml" download>actions/build-vendor.yml</a></td></tr>
+          <tr><td>Workflow chấm bài tự động</td><td><a class="file-link" href="actions/judge.yml" download>actions/judge.yml</a></td></tr>
         </tbody>
       </table>
     </section>
 
-    <section id="supabase" class="card">
-      <h2><span class="badge">Bước 2</span> Khởi tạo Database trên Supabase</h2>
-      <p>Đăng nhập <b>Supabase Dashboard</b> → tạo Project mới → mở <b>SQL Editor</b> → dán toàn bộ nội dung file <a href="./schema.sql">schema.sql</a> bên dưới và bấm <b>Run</b>:</p>
-
-      <div class="code-wrapper">
-        <button class="copy-btn" onclick="copyCode(this)">Copy SQL</button>
-        <pre>-- 1. Bảng người dùng
-CREATE TABLE IF NOT EXISTS public.users (
-  id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-  username TEXT UNIQUE NOT NULL,
-  password TEXT NOT NULL,
-  role TEXT NOT NULL DEFAULT 'user',
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- 2. Bảng kỳ thi (Contests)
-CREATE TABLE IF NOT EXISTS public.contests (
-  id TEXT PRIMARY KEY,
-  title TEXT NOT NULL,
-  start_time TIMESTAMPTZ NOT NULL,
-  end_time TIMESTAMPTZ NOT NULL,
-  restrict_users BOOLEAN DEFAULT FALSE,
-  allowed_users TEXT[] DEFAULT '{}',
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- 3. Bảng đề bài (Problems)
-CREATE TABLE IF NOT EXISTS public.problems (
-  id TEXT PRIMARY KEY,
-  title TEXT NOT NULL,
-  statement TEXT DEFAULT '',
-  time_limit_ms INT DEFAULT 1000,
-  memory_limit_mb INT DEFAULT 256,
-  contest_id TEXT REFERENCES public.contests(id) ON DELETE SET NULL,
-  problem_order INT DEFAULT 1,
-  io_mode TEXT DEFAULT 'stdio',
-  io_filename TEXT DEFAULT '',
-  hide_tests BOOLEAN DEFAULT FALSE,
-  hide_grading BOOLEAN DEFAULT FALSE,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- 4. Bảng bộ test (Test Cases)
-CREATE TABLE IF NOT EXISTS public.test_cases (
-  id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-  problem_id TEXT REFERENCES public.problems(id) ON DELETE CASCADE,
-  test_order INT NOT NULL DEFAULT 1,
-  input_data TEXT NOT NULL,
-  expected_output TEXT NOT NULL
-);
-
--- 5. Bảng lịch sử bài nộp (Submissions)
-CREATE TABLE IF NOT EXISTS public.submissions (
-  id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-  problem_id TEXT REFERENCES public.problems(id) ON DELETE CASCADE,
-  username TEXT NOT NULL,
-  language TEXT NOT NULL,
-  source_code TEXT NOT NULL,
-  status TEXT DEFAULT 'Pending',
-  verdict TEXT DEFAULT '',
-  exec_time_ms INT DEFAULT 0,
-  memory_kb INT DEFAULT 0,
-  compile_message TEXT DEFAULT '',
-  test_results JSONB DEFAULT '[]'::jsonb,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- 6. Bảng Template code mặc định theo ngôn ngữ
-CREATE TABLE IF NOT EXISTS public.language_templates (
-  id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-  language TEXT UNIQUE NOT NULL,
-  display_name TEXT NOT NULL,
-  template_code TEXT NOT NULL
-);
-
--- Dữ liệu mẫu ban đầu
-INSERT INTO public.language_templates (language, display_name, template_code) VALUES
-('cpp20', 'C++20 (GCC)', E'#include &lt;bits/stdc++.h&gt;\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n    \n    return 0;\n}\n'),
-('python', 'Python 3', E'import sys\n\ndef solve():\n    pass\n\nif __name__ == "__main__":\n    solve()\n'),
-('java', 'Java 17', E'import java.util.*;\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        Scanner sc = new Scanner(System.in);\n    }\n}\n'),
-('csharp', 'C# (.NET 8)', E'using System;\n\nclass Program {\n    static void Main() {\n    }\n}\n'),
-('rust', 'Rust', E'use std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n}\n')
-ON CONFLICT (language) DO NOTHING;
-
-INSERT INTO public.problems (id, title, statement, time_limit_ms, memory_limit_mb, problem_order)
-VALUES ('aplusb', 'Tổng hai số nguyên A + B', 'Cho hai số nguyên A và B. Tính tổng A + B.', 1000, 256, 1)
-ON CONFLICT (id) DO NOTHING;
-
-INSERT INTO public.test_cases (problem_id, test_order, input_data, expected_output)
-VALUES ('aplusb', 1, '1 2', '3'), ('aplusb', 2, '100 250', '350');
-
--- Hàm RPC phục vụ chức năng Reset toàn bộ OJ trong trang Admin
-CREATE OR REPLACE FUNCTION public.reset_entire_oj()
-RETURNS VOID
-LANGUAGE plpgsql
-SECURITY DEFINER
-AS $$
-BEGIN
-  TRUNCATE TABLE public.submissions, public.test_cases, public.problems, public.contests, public.users RESTART IDENTITY CASCADE;
-
-  INSERT INTO public.problems (id, title, statement, time_limit_ms, memory_limit_mb, problem_order)
-  VALUES ('aplusb', 'Tổng hai số nguyên A + B', 'Cho hai số nguyên A và B. Tính tổng A + B.', 1000, 256, 1);
-
-  INSERT INTO public.test_cases (problem_id, test_order, input_data, expected_output)
-  VALUES ('aplusb', 1, '1 2', '3'), ('aplusb', 2, '100 250', '350');
-END;
-$$;</pre>
+    <section class="step-card">
+      <div class="step-header">
+        <span class="badge">Bước 1</span>
+        <h2>Khởi tạo Database Supabase (<code>actions/schema-actions.sql</code>)</h2>
       </div>
-
-      <div class="note">
-        <b>Lưu ý API Keys:</b> Vào <b>Project Settings → API</b> để lấy <code class="inline">Project URL</code>, <code class="inline">anon public key</code> (cho Web App) và <code class="inline">service_role key</code> (cho C++ Judge Core).
-      </div>
-    </section>
-
-    <section id="webapp" class="card">
-      <h2><span class="badge">Bước 3</span> Triển khai Giao diện Web (<code class="inline">oj-web-app</code>)</h2>
-
-      <h3>3.1. Chạy thử trên máy cá nhân (Local)</h3>
-      <div class="code-wrapper">
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        <pre>git clone &lt;link-repo-oj-web-app&gt;
-cd oj-web-app
-npm install
-
-cat &lt;&lt;EOF &gt; .env.local
-NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-public-key
-EOF
-
-npm run dev</pre>
-      </div>
-
-      <h3>3.2. Đưa lên Internet miễn phí với Vercel</h3>
       <ol>
-        <li>Đẩy mã nguồn <code class="inline">oj-web-app</code> lên GitHub repository.</li>
-        <li>Truy cập <b>vercel.com</b> → chọn <b>Add New Project</b> → Import repository.</li>
-        <li>Trong <b>Environment Variables</b>, thêm <code class="inline">NEXT_PUBLIC_SUPABASE_URL</code> và <code class="inline">NEXT_PUBLIC_SUPABASE_ANON_KEY</code>.</li>
-        <li>Bấm <b>Deploy</b> để nhận tên miền hoạt động.</li>
+        <li>Tạo Project mới trên <a href="https://supabase.com" target="_blank">Supabase</a> &rarr; mở <strong>SQL Editor &rarr; New query</strong>.</li>
+        <li>Dán toàn bộ nội dung tệp <code>actions/schema-actions.sql</code> và bấm <strong>Run</strong>.</li>
+        <li>Vào <strong>Database &rarr; Replication</strong>, bật <strong>Realtime</strong> cho bảng <code>submissions</code>.</li>
+        <li>Lưu lại <code>Project URL</code>, <code>anon public</code> key và <code>service_role</code> key tại <strong>Project Settings &rarr; API</strong>.</li>
       </ol>
     </section>
 
-    <section id="judgecore" class="card">
-      <h2><span class="badge">Bước 4</span> Cài đặt Máy chấm C++ Judge Core (Linux VPS)</h2>
-      <p>Khuyên dùng máy chủ Linux (Ubuntu 22.04 / 24.04) để cô lập tiến trình sandbox và giới hạn bộ nhớ/thời gian chính xác.</p>
-
-      <h3>4.1. Cài đặt trình biên dịch và thư viện</h3>
-      <div class="code-wrapper">
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        <pre>sudo apt update
-sudo apt install -y g++ make cmake libcurl4-openssl-dev nlohmann-json3-dev \
-  python3 openjdk-17-jdk dotnet-sdk-8.0 rustc fp-compiler</pre>
+    <section class="step-card">
+      <div class="step-header">
+        <span class="badge">Bước 2</span>
+        <h2>Cấu hình Repo Judge &amp; Quyền ghi cho GitHub Actions</h2>
       </div>
+      <ol>
+        <li>Đẩy mã nguồn <code>oj-judge-core</code> lên GitHub, đặt hai tệp <code>actions/build-vendor.yml</code> và <code>actions/judge.yml</code> vào thư mục <code>.github/workflows/</code> của repo <code>oj-judge-core</code>.</li>
+        <li>Vào <strong>Settings &rarr; Secrets and variables &rarr; Actions</strong>, tạo 2 Secrets:
+          <ul>
+            <li><code>SUPABASE_URL</code>: URL project Supabase</li>
+            <li><code>SUPABASE_SERVICE_ROLE_KEY</code>: Service Role Key của Supabase</li>
+          </ul>
+        </li>
+        <li>Vào <strong>Settings &rarr; Actions &rarr; General</strong> &rarr; kéo xuống mục <strong>Workflow permissions</strong> &rarr; chọn <strong>Read and write permissions</strong> &rarr; bấm <strong>Save</strong>.</li>
+      </ol>
+    </section>
 
-      <h3>4.2. Cấu hình và biên dịch <code class="inline">judge.cpp</code></h3>
-      <div class="code-wrapper">
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        <pre>git clone &lt;link-repo-oj-judge-core&gt;
-cd oj-judge-core
-
-cat &lt;&lt;EOF &gt; .env
-SUPABASE_URL=https://your-project-id.supabase.co
-SUPABASE_SERVICE_KEY=your-service-role-key
-EOF
-
-g++ -O3 -std=c++17 judge.cpp -o judge -lcurl -pthread
-./judge</pre>
+    <section class="step-card">
+      <div class="step-header">
+        <span class="badge precompute">Bước 3 &bull; Precompute</span>
+        <h2>Đóng gói sẵn <code>isolate</code> &amp; <code>judge</code> vào thư mục <code>vendor/</code></h2>
+      </div>
+      <ol>
+        <li>Vào tab <strong>Actions</strong> trên repo <code>oj-judge-core</code> &rarr; chọn workflow <strong>Build Offline Vendor Bundle (Ubuntu 24.04 Noble Numbat)</strong> &rarr; bấm <strong>Run workflow</strong> (chỉ chạy 1 lần duy nhất).</li>
+        <li>Sau khi chạy xong (~30 giây), kiểm tra nhánh chính của repo đã tự động xuất hiện <code>vendor/bin/isolate</code>, <code>vendor/bin/judge</code> và <code>nlohmann_json.hpp</code>.</li>
+      </ol>
+      <div class="callout purple">
+        <strong>Lưu ý vận hành:</strong> Workflow chấm bài khóa cứng <code>VERSION_CODENAME=noble</code> (Ubuntu 24.04) và chạy với <code>sudo -E ./judge</code>. Khi nào bạn sửa code trong <code>judge.cpp</code>, chỉ cần chạy lại workflow <strong>Build Offline Vendor Bundle</strong> 1 lần để cập nhật tệp <code>vendor/bin/judge</code> mới.
       </div>
     </section>
 
-    <section id="systemd" class="card">
-      <h2><span class="badge">Bước 5</span> Chạy ngầm 24/7 với Systemd Service</h2>
-      <p>Cài đặt service để trình chấm tự khởi động lại khi VPS khởi động lại hoặc gặp sự cố mạng:</p>
+    <section class="step-card">
+      <div class="step-header">
+        <span class="badge">Bước 4</span>
+        <h2>Tạo Webhook kết nối Supabase &rarr; GitHub Actions</h2>
+      </div>
+      <ol>
+        <li>Tạo GitHub <strong>Personal Access Token (classic)</strong> có quyền <code>repo</code> và <code>workflow</code>.</li>
+        <li>Trên Supabase, vào <strong>Database &rarr; Webhooks &rarr; Create a new hook</strong>:
+          <ul>
+            <li><strong>Table:</strong> <code>submissions</code> | <strong>Events:</strong> <code>Insert</code></li>
+            <li><strong>Method:</strong> <code>POST</code> | <strong>URL:</strong> <code>https://api.github.com/repos/&lt;USER&gt;/oj-judge-core/dispatches</code></li>
+            <li><strong>Headers:</strong> <code>Authorization: Bearer &lt;GITHUB_PAT&gt;</code> và <code>Accept: application/vnd.github+json</code></li>
+          </ul>
+        </li>
+      </ol>
+    </section>
 
-      <div class="code-wrapper">
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        <pre>sudo tee /etc/systemd/system/oj-judge.service &gt; /dev/null &lt;&lt;EOF
-[Unit]
-Description=Online Judge C++ Core Worker
-After=network.target
+    <section class="step-card">
+      <div class="step-header">
+        <span class="badge">Bước 5</span>
+        <h2>Deploy Web Frontend &amp; Khởi tạo Admin đầu tiên</h2>
+      </div>
+      <ol>
+        <li>Import repo <code>oj-web-app</code> lên Vercel với 2 biến môi trường:
+          <div class="code-wrap">
+            <button type="button" class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre><code>NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOi...</code></pre>
+          </div>
+        </li>
+        <li>Truy cập trang web ngay sau khi deploy để hoàn tất khởi tạo tài khoản <strong>Admin</strong> đầu tiên.</li>
+      </ol>
+      <div class="callout warn">
+        <strong>Bảo mật:</strong> Hệ thống sẽ khóa toàn bộ giao diện cho tới khi tài khoản Admin đầu tiên được tạo xong.
+      </div>
+    </section>
 
-[Service]
-Type=simple
-User=root
-WorkingDirectory=/root/oj-judge-core
-ExecStart=/root/oj-judge-core/judge
-Restart=always
-RestartSec=3
+  </div>
 
-[Install]
-WantedBy=multi-user.target
+  <!-- ====================================================================== -->
+  <!-- TAB 2: HƯỚNG DẪN RIÊNG CHO VPS LINUX                                   -->
+  <!-- ====================================================================== -->
+  <div id="panel-vps" class="tab-panel">
+
+    <section class="step-card">
+      <div class="step-header">
+        <span class="badge vps">Tổng quan</span>
+        <h2>Kiến trúc VPS Linux (Chấm tức thì &lt; 1 giây, không giới hạn phút chạy)</h2>
+      </div>
+      <p>Phù hợp khi bạn có VPS riêng chạy <strong>Ubuntu 24.04 LTS (Noble Numbat)</strong>. Trình chấm chạy dưới dạng dịch vụ nền <code>systemd</code>, nhận bài qua hàm hàng đợi nguyên tử <code>claim_next_submission()</code> mỗi <code>250ms</code> và lưu cache bộ test trực tiếp trên RAM disk <code>/dev/shm/oj_tc_cache</code>.</p>
+      <table>
+        <thead>
+          <tr><th>Thành phần</th><th>Tệp cấu hình trong repo</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Database Schema + Atomic RPC</td><td><a class="file-link" href="vps/schema-vps.sql" download>vps/schema-vps.sql</a></td></tr>
+          <tr><td>Script vòng lặp Worker</td><td><a class="file-link" href="vps/worker-vps.sh" download>vps/worker-vps.sh</a> (đặt tại <code>/opt/oj-judge/worker-vps.sh</code>)</td></tr>
+          <tr><td>Dịch vụ hệ thống Systemd</td><td><a class="file-link" href="vps/oj-judge.service" download>vps/oj-judge.service</a> (đặt tại <code>/etc/systemd/system/oj-judge.service</code>)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="step-card">
+      <div class="step-header">
+        <span class="badge vps">Bước 1</span>
+        <h2>Khởi tạo Database Supabase (<code>vps/schema-vps.sql</code>)</h2>
+      </div>
+      <ol>
+        <li>Tạo Project trên <a href="https://supabase.com" target="_blank">Supabase</a> &rarr; mở <strong>SQL Editor &rarr; New query</strong>.</li>
+        <li>Dán toàn bộ nội dung tệp <code>vps/schema-vps.sql</code> (bao gồm bảng, index hàng đợi <code>Pending</code> và hàm RPC <code>claim_next_submission()</code>) rồi bấm <strong>Run</strong>.</li>
+        <li>Vào <strong>Database &rarr; Replication</strong>, bật <strong>Realtime</strong> cho bảng <code>submissions</code> (không cần tạo Webhook).</li>
+      </ol>
+    </section>
+
+    <section class="step-card">
+      <div class="step-header">
+        <span class="badge precompute">Bước 2 &bull; Precompute / Build</span>
+        <h2>Cài đặt Isolate &amp; Binary Judge Engine lên VPS</h2>
+      </div>
+      <p>Trên VPS Ubuntu 24.04 (Noble Numbat), bạn có thể cài trực tiếp từ gói <code>vendor/</code> đã precompute sẵn trong repo <code>oj-judge-core</code> hoặc biên dịch một lần duy nhất:</p>
+
+      <h3>Cách A: Dùng trực tiếp gói <code>vendor/</code> đã Precompute (Khuyên dùng - 5 giây)</h3>
+      <div class="code-wrap">
+        <button type="button" class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code>sudo apt-get update &amp;&amp; sudo apt-get install -y libcurl4t64 libcap2 libsystemd0 libseccomp2 python3 default-jdk g++
+git clone https://github.com/&lt;USER&gt;/oj-judge-core.git /opt/oj-judge
+cd /opt/oj-judge
+
+sudo mkdir -p /usr/local/bin /usr/local/etc /run/isolate/locks /var/local/lib/isolate
+sudo cp vendor/bin/isolate /usr/local/bin/
+sudo cp vendor/bin/isolate-check-environment /usr/local/bin/ 2&gt;/dev/null || true
+sudo chown root:root /usr/local/bin/isolate &amp;&amp; sudo chmod 4755 /usr/local/bin/isolate
+sudo cp vendor/etc/isolate /usr/local/etc/isolate
+echo "cg_root = /sys/fs/cgroup" | sudo tee -a /usr/local/etc/isolate
+sudo useradd -r -s /usr/sbin/nologin isolate || true
+echo "isolate:100000:65536" | sudo tee -a /etc/subuid /etc/subgid
+
+cp vendor/bin/judge /opt/oj-judge/judge
+chmod +x /opt/oj-judge/judge /opt/oj-judge/worker-vps.sh</code></pre>
+      </div>
+
+      <h3>Cách B: Biên dịch trực tiếp từ mã nguồn trên VPS</h3>
+      <div class="code-wrap">
+        <button type="button" class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code>sudo apt-get update
+sudo apt-get install -y libcurl4-openssl-dev libcap-dev libsystemd-dev libseccomp-dev build-essential git curl python3 default-jdk
+git clone --depth 1 https://github.com/ioi/isolate.git /tmp/isolate
+make -C /tmp/isolate isolate &amp;&amp; sudo make -C /tmp/isolate install
+cd /opt/oj-judge
+g++ -O3 -std=c++20 judge.cpp -lcurl -o /opt/oj-judge/judge</code></pre>
+      </div>
+    </section>
+
+    <section class="step-card">
+      <div class="step-header">
+        <span class="badge vps">Bước 3</span>
+        <h2>Cấu hình biến môi trường &amp; Kích hoạt <code>vps/oj-judge.service</code></h2>
+      </div>
+      <ol>
+        <li>Tạo tệp <code>/opt/oj-judge/.env</code> chứa thông tin kết nối Supabase (dùng <code>service_role</code> key):
+          <div class="code-wrap">
+            <button type="button" class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre><code>cat &lt;&lt; 'EOF' | sudo tee /opt/oj-judge/.env
+SUPABASE_URL=https://xxxx.supabase.co
+SUPABASE_KEY=eyJhbGciOi...service_role_key...
 EOF
-
+sudo chmod 600 /opt/oj-judge/.env</code></pre>
+          </div>
+        </li>
+        <li>Copy <code>vps/worker-vps.sh</code> vào <code>/opt/oj-judge/</code> và <code>vps/oj-judge.service</code> vào <code>/etc/systemd/system/</code>:
+          <div class="code-wrap">
+            <button type="button" class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre><code>sudo cp vps/worker-vps.sh /opt/oj-judge/worker-vps.sh
+sudo chmod +x /opt/oj-judge/worker-vps.sh
+sudo cp vps/oj-judge.service /etc/systemd/system/oj-judge.service
 sudo systemctl daemon-reload
-sudo systemctl enable oj-judge
-sudo systemctl start oj-judge
-sudo journalctl -u oj-judge -f</pre>
+sudo systemctl enable --now oj-judge
+
+# Kiểm tra trạng thái &amp; log trực tiếp
+sudo systemctl status oj-judge
+sudo journalctl -u oj-judge -f</code></pre>
+          </div>
+        </li>
+      </ol>
+      <div class="callout ok">
+        <strong>Mẹo hiệu năng:</strong> Bộ nhớ đệm test case <code>/dev/shm/oj_tc_cache</code> nằm trên RAM của VPS sẽ được giữ xuyên suốt giữa các lần nộp bài, giúp tốc độ nạp test gần như bằng 0 ms.
       </div>
     </section>
 
-    <section id="checklist" class="card">
-      <h2><span class="badge">Bước 6</span> Kiểm thử sau khi triển khai</h2>
-      <ul>
-        <li><b>Khởi tạo Admin đầu tiên:</b> Đăng ký tài khoản đầu tiên trên Web → vào bảng <code class="inline">users</code> trên Supabase đổi cột <code class="inline">role</code> thành <code class="inline">admin</code>.</li>
-        <li><b>Kiểm thử luồng chuẩn (<code class="inline">stdin/stdout</code>):</b> Nộp thử bài mẫu <code class="inline">aplusb</code> bằng C++ và Python để xác nhận verdict <b>AC</b>.</li>
-        <li><b>Kiểm thử File I/O (<code class="inline">.in/.out</code>):</b> Tạo 1 bài chọn chế độ File I/O, nộp code dùng <code class="inline">freopen</code> để kiểm tra trình chấm tự dọn sandbox.</li>
-        <li><b>Kiểm thử Contest &amp; OI Mode:</b> Tạo Contest bắt đầu ngay, nhân bản bài từ Luyện tập tự do vào Contest và kiểm tra tính năng ẩn kết quả trong giờ thi.</li>
-      </ul>
+    <section class="step-card">
+      <div class="step-header">
+        <span class="badge vps">Bước 4</span>
+        <h2>Deploy Web Frontend &amp; Khởi tạo Admin đầu tiên</h2>
+      </div>
+      <ol>
+        <li>Deploy <code>oj-web-app</code> lên Vercel hoặc chạy trực tiếp trên VPS bằng PM2/Node.js với 2 biến:
+          <div class="code-wrap">
+            <button type="button" class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre><code>NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOi...</code></pre>
+          </div>
+        </li>
+        <li>Mở trình duyệt truy cập trang web lần đầu và tạo tài khoản Quản trị viên (<strong>Admin</strong>) để mở khóa hệ thống.</li>
+      </ol>
     </section>
 
-  </main>
+  </div>
 
-  <footer>
-    Online Judge Open-Source Documentation • MIT License
-  </footer>
+</main>
 
-  <script>
-    function copyCode(btn) {
-      const pre = btn.parentElement.querySelector('pre');
-      navigator.clipboard.writeText(pre.innerText).then(() => {
-        const original = btn.innerText;
-        btn.innerText = 'Đã copy!';
-        btn.style.background = '#16a34a';
-        setTimeout(() => {
-          btn.innerText = original;
-          btn.style.background = '';
-        }, 1800);
-      });
-    }
-  </script>
+<footer>
+  Open-Source Online Judge Deployment Guide &bull; MIT License
+</footer>
+
+<script>
+  function switchTab(tab) {
+    const isActions = tab === 'actions';
+    document.getElementById('panel-actions').classList.toggle('active', isActions);
+    document.getElementById('panel-vps').classList.toggle('active', !isActions);
+
+    const btnActions = document.getElementById('btn-actions');
+    const btnVps = document.getElementById('btn-vps');
+    btnActions.className = 'tab-btn' + (isActions ? ' active-actions' : '');
+    btnVps.className = 'tab-btn' + (!isActions ? ' active-vps' : '');
+
+    try { localStorage.setItem('oj_docs_tab', tab); } catch (e) {}
+  }
+
+  function copyCode(btn) {
+    const code = btn.parentElement.querySelector('code').innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      const old = btn.innerText;
+      btn.innerText = 'Đã copy!';
+      setTimeout(() => { btn.innerText = old; }, 1500);
+    });
+  }
+
+  try {
+    const saved = localStorage.getItem('oj_docs_tab');
+    if (saved === 'vps' || saved === 'actions') switchTab(saved);
+  } catch (e) {}
+</script>
+
 </body>
 </html>
