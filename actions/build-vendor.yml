@@ -1,0 +1,53 @@
+name: Build Offline Vendor Bundle (Ubuntu 24.04 Noble Numbat)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-vendor:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Xác minh bắt buộc Ubuntu 24.04 (Noble Numbat)
+        run: |
+          source /etc/os-release
+          if [ "$VERSION_CODENAME" != "noble" ]; then
+            echo "ERROR: Chỉ chấp nhận Ubuntu 24.04 (noble), phát hiện '$VERSION_CODENAME'!"
+            exit 1
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Isolate từ source & biên dịch Judge Engine cho Noble Numbat
+        run: |
+          rm -rf vendor && mkdir -p vendor/bin vendor/etc
+          sudo apt-get update
+          sudo apt-get install -y libcurl4-openssl-dev libcap-dev libsystemd-dev libseccomp-dev build-essential git curl
+
+          # Tải nlohmann_json.hpp lưu cố định trong repo
+          curl -sL https://github.com/nlohmann/json/releases/latest/download/json.hpp -o nlohmann_json.hpp
+
+          # Build isolate từ source ioi/isolate
+          git clone --depth 1 https://github.com/ioi/isolate.git /tmp/isolate
+          make -C /tmp/isolate isolate
+          sudo make -C /tmp/isolate install
+
+          # Đóng gói binary isolate, cấu hình mặc định và binary judge vào vendor/
+          cp /usr/local/bin/isolate vendor/bin/
+          cp /usr/local/bin/isolate-check-environment vendor/bin/ 2>/dev/null || true
+          cp /usr/local/etc/isolate vendor/etc/isolate
+
+          g++ -O3 -std=c++20 judge.cpp -lcurl -o vendor/bin/judge
+          chmod +x vendor/bin/*
+
+      - name: Tự động commit vendor/ và nlohmann_json.hpp vào repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add vendor/ nlohmann_json.hpp
+          git commit -m "chore: prebuilt Noble Numbat (24.04) isolate & judge binary"
+          git push
