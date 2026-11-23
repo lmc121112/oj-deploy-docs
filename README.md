@@ -1,21 +1,22 @@
-# ⚡ Online Judge Open-Source — Deployment Documentation
+# ⚡ Online Judge Deployment Documentation (`oj-deploy-docs`)
 
-Repository tài liệu hướng dẫn cài đặt và triển khai trọn bộ hệ thống chấm bài tự động mã nguồn mở gồm 3 thành phần:
-- **Database**: Supabase (PostgreSQL + RPC)
-- **Web Frontend (`oj-web-app`)**: Next.js + Ace Editor
-- **Judge Worker (`oj-judge-core`)**: C++17 Sandbox Worker
+Tài liệu triển khai độc lập cho hệ thống **Online Judge** (Next.js + Supabase + `isolate` Sandbox), hỗ trợ 2 kiến trúc máy chấm chạy trên **Ubuntu 24.04 LTS (Noble Numbat)**:
 
-## 🚀 Xem trang tài liệu trực quan
+1. **GitHub Actions (Serverless + Precompute `vendor/`)**: Miễn phí, đóng gói sẵn binary `isolate` và `judge` vào repo để khởi tạo trong `< 1s`.
+2. **VPS Linux (Systemd Daemon)**: Độ trễ cực thấp (`250ms` polling), sử dụng hàng đợi nguyên tử `FOR UPDATE SKIP LOCKED` và RAM disk cache `/dev/shm/oj_tc_cache`.
 
-1. Bật **GitHub Pages** cho repository này (`Settings` → `Pages` → chọn nhánh `main` và thư mục `/ (root)`).
-2. Mở đường dẫn `https://<username>.github.io/oj-deploy-docs/` để xem hướng dẫn kèm nút copy lệnh nhanh.
+## Cấu trúc thư mục
 
-## 📂 Thành phần trong Repository
-
-- `index.html`: Giao diện Web hướng dẫn triển khai từng bước.
-- `schema.sql`: Script khởi tạo toàn bộ bảng, dữ liệu mẫu và hàm `reset_entire_oj()` trên Supabase.
-- `oj-judge.service`: File cấu hình `systemd` mẫu để chạy trình chấm `judge` ngầm 24/7 trên Ubuntu/Debian.
-
-## 📄 Giấy phép
-
-Phát hành theo giấy phép **MIT License** — tự do sử dụng, chỉnh sửa và chia sẻ cho cộng đồng.
+```text
+oj-deploy-docs/
+├── index.html                  # Trang hướng dẫn trực quan 2 Tab (bật GitHub Pages để xem)
+├── LICENSE                     # Giấy phép mã nguồn mở MIT
+├── README.md                   # Tài liệu tổng quan
+├── actions/                    # Cấu hình dành cho GitHub Actions Runner
+│   ├── schema-actions.sql      # SQL tạo 6 bảng + Realtime
+│   ├── build-vendor.yml        # Workflow Precompute gói vendor/ (chạy 1 lần)
+│   └── judge.yml               # Workflow chấm bài tự động dùng vendor/
+└── vps/                        # Cấu hình dành cho VPS Linux (Ubuntu 24.04)
+    ├── schema-vps.sql          # SQL tạo 6 bảng + Index hàng đợi + RPC claim_next_submission()
+    ├── worker-vps.sh           # Script vòng lặp nhận bài Pending
+    └── oj-judge.service        # Dịch vụ systemd chạy nền & tự khởi động lại
