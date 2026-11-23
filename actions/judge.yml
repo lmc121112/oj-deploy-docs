@@ -1,0 +1,62 @@
+name: Run Multi-Language Judge
+
+on:
+  repository_dispatch:
+    types: [new_submission]
+  workflow_dispatch:
+    inputs:
+      submission_id:
+        description: 'ID bai nop can cham thu cong'
+        required: true
+
+jobs:
+  judge-job:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+
+    steps:
+      - name: Xác minh runner Noble Numbat (24.04)
+        run: |
+          source /etc/os-release
+          if [ "$VERSION_CODENAME" != "noble" ]; then
+            echo "ERROR: Sai phiên bản Ubuntu ($VERSION_CODENAME). Yêu cầu noble (24.04)."
+            exit 1
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cài đặt Isolate & Judge Engine (ưu tiên vendor/ precomputed < 1s)
+        run: |
+          sudo mkdir -p /usr/local/bin /usr/local/etc /run/isolate/locks /var/local/lib/isolate
+
+          if [ -f "vendor/bin/isolate" ] && [ -f "vendor/bin/judge" ]; then
+            sudo cp vendor/bin/isolate /usr/local/bin/
+            sudo cp vendor/bin/isolate-check-environment /usr/local/bin/ 2>/dev/null || true
+            sudo chown root:root /usr/local/bin/isolate
+            sudo chmod 4755 /usr/local/bin/isolate
+            sudo cp vendor/etc/isolate /usr/local/etc/isolate
+            chmod +x vendor/bin/judge
+            cp vendor/bin/judge ./judge
+          else
+            sudo apt-get update
+            sudo apt-get install -y libcurl4-openssl-dev libcap-dev libsystemd-dev libseccomp-dev build-essential git curl
+            [ -f nlohmann_json.hpp ] || curl -sL https://github.com/nlohmann/json/releases/latest/download/json.hpp -o nlohmann_json.hpp
+            git clone --depth 1 https://github.com/ioi/isolate.git /tmp/isolate
+            make -C /tmp/isolate isolate
+            sudo make -C /tmp/isolate install
+            g++ -O3 -std=c++20 judge.cpp -lcurl -o ./judge
+          fi
+
+          grep -q "cg_root" /usr/local/etc/isolate || echo "cg_root = /sys/fs/cgroup" | sudo tee -a /usr/local/etc/isolate > /dev/null
+          sudo useradd -r -s /usr/sbin/nologin isolate || true
+          echo "isolate:100000:65536" | sudo tee -a /etc/subuid /etc/subgid > /dev/null
+
+      - name: Execute Judge on Submission
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUB_ID: ${{ github.event.client_payload.record.id || github.event.inputs.submission_id }}
+        run: |
+          sudo -E ./judge "$SUB_ID"
+          if [ -f compile_err.txt ]; then cat compile_err.txt; fi
