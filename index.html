@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tài liệu Hệ thống Online Judge (Docs)</title>
+  <title>Tài liệu Hệ thống Online Judge (Docs & Downloads)</title>
   <style>
     :root {
       --bg-page: #f8fafc;
@@ -15,6 +15,7 @@
       --text-code: #f8fafc;
       --border: #e2e8f0;
       --primary: #2563eb;
+      --primary-hover: #1d4ed8;
       --primary-soft: rgba(37, 99, 235, 0.08);
       --accent-green: #16a34a;
       --accent-amber: #d97706;
@@ -33,6 +34,7 @@
       --text-code: #e2e8f0;
       --border: #1e293b;
       --primary: #3b82f6;
+      --primary-hover: #2563eb;
       --primary-soft: rgba(59, 130, 246, 0.14);
     }
 
@@ -212,7 +214,7 @@
       margin-left: var(--sidebar-w);
       flex: 1;
       padding: 28px 36px 80px;
-      max-width: 1040px;
+      max-width: 1060px;
     }
 
     /* ROLE TABS */
@@ -229,14 +231,14 @@
 
     .role-tab {
       flex: 1;
-      min-width: 160px;
-      padding: 9px 14px;
+      min-width: 145px;
+      padding: 9px 12px;
       border: none;
       border-radius: 7px;
       background: transparent;
       color: var(--text-muted);
       font-weight: 700;
-      font-size: 13.5px;
+      font-size: 13px;
       cursor: pointer;
       transition: all 0.15s;
     }
@@ -268,6 +270,8 @@
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
       gap: 8px;
     }
 
@@ -288,6 +292,102 @@
 
     .doc-section li {
       margin-bottom: 6px;
+    }
+
+    /* DOWNLOAD CARDS */
+    .dl-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 14px;
+      margin: 14px 0;
+    }
+
+    .dl-card {
+      border: 1px solid var(--border);
+      background-color: var(--bg-subtle);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .dl-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .dl-filename {
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--primary);
+    }
+
+    .dl-ext {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .dl-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    .dl-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-dl {
+      background-color: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 7px 13px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+
+    .btn-dl:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-dl.secondary {
+      background-color: var(--bg-surface);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+    }
+
+    .btn-dl.secondary:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-dl.green {
+      background-color: var(--accent-green);
+    }
+
+    .btn-dl.green:hover {
+      background-color: #15803d;
     }
 
     /* INLINE CODE & CODE BLOCK */
@@ -317,6 +417,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 8px;
+    }
+
+    .code-header-btns {
+      display: flex;
+      gap: 6px;
     }
 
     .copy-btn {
@@ -452,6 +558,51 @@
     .b-ce { background: #475569; }
     .b-g { background: #1e293b; }
 
+    /* MODAL PREVIEW FILE */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background-color: var(--bg-surface);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 820px;
+      max-height: 86vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .modal-head {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-body {
+      padding: 16px;
+      overflow-y: auto;
+      background-color: var(--bg-code);
+    }
+
     .hidden-by-filter {
       display: none !important;
     }
@@ -486,14 +637,14 @@
       <button class="btn-icon menu-toggle" id="menuToggle" type="button">☰ Mục lục</button>
       <a href="#tong-quan" class="brand">
         <span>⚡ Online Judge Docs</span>
-        <span class="brand-badge">v2.0</span>
+        <span class="brand-badge">v2.1</span>
       </a>
     </div>
 
     <div class="topbar-actions">
       <div class="search-box">
         <span class="search-icon">🔍</span>
-        <input type="text" id="searchInput" placeholder="Tìm nhanh (isolate, LaTeX, OI...)" />
+        <input type="text" id="searchInput" placeholder="Tìm nhanh (tải file, isolate, LaTeX...)" />
       </div>
       <button class="btn-icon" id="themeToggle" type="button" title="Đổi giao diện Sáng / Tối">🌓 Giao diện</button>
     </div>
@@ -503,32 +654,33 @@
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
       <div class="nav-group" data-group="all">
-        <div class="nav-group-title">Tổng quan hệ thống</div>
-        <a class="nav-link" href="#tong-quan">1. Kiến trúc & Luồng chấm</a>
-        <a class="nav-link" href="#ngon-ngu">2. Ngôn ngữ & Sandbox</a>
+        <div class="nav-group-title">Tổng quan &amp; Tải xuống</div>
+        <a class="nav-link" href="#tong-quan">1. Kiến trúc &amp; Luồng chấm</a>
+        <a class="nav-link" href="#kho-tai-xuong">2. Kho Tải tệp Cấu hình &amp; Mẫu</a>
+        <a class="nav-link" href="#ngon-ngu">3. Ngôn ngữ &amp; Sandbox</a>
       </div>
 
       <div class="nav-group" data-group="deploy">
         <div class="nav-group-title">Triển khai hệ thống (DevOps)</div>
-        <a class="nav-link" href="#deploy-supabase">3. Thiết lập Supabase DB</a>
-        <a class="nav-link" href="#deploy-actions">4. Worker GitHub Actions</a>
-        <a class="nav-link" href="#deploy-vps">5. Worker VPS (24/7 systemd)</a>
-        <a class="nav-link" href="#deploy-vercel">6. Triển khai Web lên Vercel</a>
+        <a class="nav-link" href="#deploy-supabase">4. Thiết lập Supabase DB</a>
+        <a class="nav-link" href="#deploy-actions">5. Worker GitHub Actions</a>
+        <a class="nav-link" href="#deploy-vps">6. Worker VPS (24/7 systemd)</a>
+        <a class="nav-link" href="#deploy-vercel">7. Triển khai Web lên Vercel</a>
       </div>
 
       <div class="nav-group" data-group="admin">
-        <div class="nav-group-title">Quản trị & Tác giả đề bài</div>
-        <a class="nav-link" href="#admin-markdown">7. Soạn đề Markdown + LaTeX</a>
-        <a class="nav-link" href="#admin-io-tests">8. Cấu hình I/O & Test Cases</a>
-        <a class="nav-link" href="#admin-contest">9. Tổ chức Kỳ thi (ICPC / OI)</a>
-        <a class="nav-link" href="#admin-templates">10. Quản lý Code Mẫu (Templates)</a>
+        <div class="nav-group-title">Quản trị &amp; Tác giả đề bài</div>
+        <a class="nav-link" href="#admin-markdown">8. Soạn đề Markdown + LaTeX</a>
+        <a class="nav-link" href="#admin-io-tests">9. Cấu hình I/O &amp; Test Cases</a>
+        <a class="nav-link" href="#admin-contest">10. Tổ chức Kỳ thi (ICPC / OI)</a>
+        <a class="nav-link" href="#admin-templates">11. Quản lý Code Mẫu (Templates)</a>
       </div>
 
       <div class="nav-group" data-group="user">
         <div class="nav-group-title">Hướng dẫn Thí sinh</div>
-        <a class="nav-link" href="#user-submit">11. Quy trình làm & nộp bài</a>
-        <a class="nav-link" href="#user-verdicts">12. Giải thích Mã kết quả (Verdicts)</a>
-        <a class="nav-link" href="#user-contest-rules">13. Quy chế thi & Lịch sử nộp</a>
+        <a class="nav-link" href="#user-submit">12. Quy trình làm &amp; nộp bài</a>
+        <a class="nav-link" href="#user-verdicts">13. Giải thích Mã kết quả (Verdicts)</a>
+        <a class="nav-link" href="#user-contest-rules">14. Quy chế thi &amp; Lịch sử nộp</a>
       </div>
     </aside>
 
@@ -537,14 +689,15 @@
       <!-- BỘ LỌC NHANH THEO VAI TRÒ -->
       <div class="role-tabs">
         <button class="role-tab active" data-role="all">📚 Tất cả tài liệu</button>
+        <button class="role-tab" data-role="downloads">📦 Tải tệp cấu hình</button>
         <button class="role-tab" data-role="deploy">🛠️ Triển khai hệ thống</button>
-        <button class="role-tab" data-role="admin">✍️ Quản trị & Ra đề</button>
+        <button class="role-tab" data-role="admin">✍️ Quản trị &amp; Ra đề</button>
         <button class="role-tab" data-role="user">🎓 Dành cho Thí sinh</button>
       </div>
 
       <!-- 1. TỔNG QUAN -->
       <section class="doc-section" id="tong-quan" data-category="all deploy admin user">
-        <h1>Tài liệu Vận hành & Sử dụng Hệ thống Online Judge</h1>
+        <h1>Tài liệu Vận hành &amp; Sử dụng Hệ thống Online Judge</h1>
         <p>
           Hệ thống Online Judge được thiết kế theo kiến trúc tách rời giữa giao diện Web, cơ sở dữ liệu hàng đợi và lõi chấm bài cô lập sandbox, gồm 3 thành phần chính:
         </p>
@@ -557,12 +710,12 @@
           </div>
           <div class="arch-card">
             <span class="tag">Supabase</span>
-            <h4>PostgreSQL & Hàng đợi</h4>
+            <h4>PostgreSQL &amp; Hàng đợi</h4>
             <p>Lưu trữ tài khoản, đề bài, test cases, kỳ thi, code mẫu và hàng đợi bài nộp <code>Pending → Finished</code>.</p>
           </div>
           <div class="arch-card">
             <span class="tag">oj-judge-core</span>
-            <h4>Lõi chấm C++ & Isolate</h4>
+            <h4>Lõi chấm C++ &amp; Isolate</h4>
             <p>Biên dịch và chạy code thí sinh trong sandbox <code>isolate</code>, đo thời gian (ms), bộ nhớ (KB) chính xác.</p>
           </div>
         </div>
@@ -576,9 +729,144 @@
         </ol>
       </section>
 
-      <!-- 2. NGÔN NGỮ & SANDBOX -->
+      <!-- 2. KHO TẢI XUỐNG -->
+      <section class="doc-section" id="kho-tai-xuong" data-category="all downloads deploy admin">
+        <h2>
+          <span>2. Kho Tải Tệp Cấu hình &amp; Biểu mẫu (Downloads)</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn-dl green" type="button" onclick="downloadBundle('actions')">⬇ Tải gói GitHub Actions (3 tệp)</button>
+            <button class="btn-dl green" type="button" onclick="downloadBundle('vps')">⬇ Tải gói VPS 24/7 (3 tệp)</button>
+          </div>
+        </h2>
+        <p>
+          Tải trực tiếp toàn bộ tệp SQL khởi tạo cơ sở dữ liệu, GitHub Actions workflows, script dịch vụ VPS và mẫu soạn đề Markdown + LaTeX chỉ với một cú nhấp chuột (hoặc bấm <strong>Xem trước</strong> để kiểm tra nội dung trước khi tải):
+        </p>
+
+        <h3>A. Nhóm Triển khai GitHub Actions (Miễn phí)</h3>
+        <div class="dl-grid">
+          <div class="dl-card">
+            <div>
+              <div class="dl-card-top">
+                <span class="dl-filename">schema-actions.sql</span>
+                <span class="dl-ext">SQL</span>
+              </div>
+              <p class="dl-desc">Schema PostgreSQL khởi tạo đầy đủ bảng dữ liệu cho Supabase khi dùng Worker GitHub Actions.</p>
+            </div>
+            <div class="dl-actions">
+              <button class="btn-dl" type="button" onclick="downloadFile('schema-actions.sql')">⬇ Tải xuống</button>
+              <button class="btn-dl secondary" type="button" onclick="previewFile('schema-actions.sql')">👁 Xem trước</button>
+            </div>
+          </div>
+
+          <div class="dl-card">
+            <div>
+              <div class="dl-card-top">
+                <span class="dl-filename">build-vendor.yml</span>
+                <span class="dl-ext">YAML</span>
+              </div>
+              <p class="dl-desc">Workflow biên dịch sẵn <code>vendor/bin/judge</code> và <code>isolate</code> trên Ubuntu runner.</p>
+            </div>
+            <div class="dl-actions">
+              <button class="btn-dl" type="button" onclick="downloadFile('build-vendor.yml')">⬇ Tải xuống</button>
+              <button class="btn-dl secondary" type="button" onclick="previewFile('build-vendor.yml')">👁 Xem trước</button>
+            </div>
+          </div>
+
+          <div class="dl-card">
+            <div>
+              <div class="dl-card-top">
+                <span class="dl-filename">judge.yml</span>
+                <span class="dl-ext">YAML</span>
+              </div>
+              <p class="dl-desc">Workflow tự động lấy bài nộp <code>Pending</code> từ Supabase và chấm định kỳ hoặc thủ công.</p>
+            </div>
+            <div class="dl-actions">
+              <button class="btn-dl" type="button" onclick="downloadFile('judge.yml')">⬇ Tải xuống</button>
+              <button class="btn-dl secondary" type="button" onclick="previewFile('judge.yml')">👁 Xem trước</button>
+            </div>
+          </div>
+        </div>
+
+        <h3>B. Nhóm Triển khai Máy chủ VPS (Chấm thời gian thực 24/7)</h3>
+        <div class="dl-grid">
+          <div class="dl-card">
+            <div>
+              <div class="dl-card-top">
+                <span class="dl-filename">schema-vps.sql</span>
+                <span class="dl-ext">SQL</span>
+              </div>
+              <p class="dl-desc">Schema PostgreSQL tối ưu cho VPS worker chạy liên tục và đồng bộ kết quả tức thì.</p>
+            </div>
+            <div class="dl-actions">
+              <button class="btn-dl" type="button" onclick="downloadFile('schema-vps.sql')">⬇ Tải xuống</button>
+              <button class="btn-dl secondary" type="button" onclick="previewFile('schema-vps.sql')">👁 Xem trước</button>
+            </div>
+          </div>
+
+          <div class="dl-card">
+            <div>
+              <div class="dl-card-top">
+                <span class="dl-filename">worker-vps.sh</span>
+                <span class="dl-ext">BASH</span>
+              </div>
+              <p class="dl-desc">Script vòng lặp daemon gọi lõi <code>judge</code> kiểm tra hàng đợi bài nộp liên tục trên Linux.</p>
+            </div>
+            <div class="dl-actions">
+              <button class="btn-dl" type="button" onclick="downloadFile('worker-vps.sh')">⬇ Tải xuống</button>
+              <button class="btn-dl secondary" type="button" onclick="previewFile('worker-vps.sh')">👁 Xem trước</button>
+            </div>
+          </div>
+
+          <div class="dl-card">
+            <div>
+              <div class="dl-card-top">
+                <span class="dl-filename">oj-judge.service</span>
+                <span class="dl-ext">SYSTEMD</span>
+              </div>
+              <p class="dl-desc">Tệp cấu hình dịch vụ <code>systemd</code> giúp worker tự khởi động cùng VPS và tự khôi phục khi lỗi.</p>
+            </div>
+            <div class="dl-actions">
+              <button class="btn-dl" type="button" onclick="downloadFile('oj-judge.service')">⬇ Tải xuống</button>
+              <button class="btn-dl secondary" type="button" onclick="previewFile('oj-judge.service')">👁 Xem trước</button>
+            </div>
+          </div>
+        </div>
+
+        <h3>C. Tệp Mẫu Môi trường &amp; Soạn Đề bài</h3>
+        <div class="dl-grid">
+          <div class="dl-card">
+            <div>
+              <div class="dl-card-top">
+                <span class="dl-filename">.env.local.example</span>
+                <span class="dl-ext">ENV</span>
+              </div>
+              <p class="dl-desc">Mẫu biến môi trường kết nối Supabase cho ứng dụng web Next.js (<code>oj-web-app</code>).</p>
+            </div>
+            <div class="dl-actions">
+              <button class="btn-dl" type="button" onclick="downloadFile('.env.local.example')">⬇ Tải xuống</button>
+              <button class="btn-dl secondary" type="button" onclick="previewFile('.env.local.example')">👁 Xem trước</button>
+            </div>
+          </div>
+
+          <div class="dl-card">
+            <div>
+              <div class="dl-card-top">
+                <span class="dl-filename">mau-de-bai.md</span>
+                <span class="dl-ext">MARKDOWN</span>
+              </div>
+              <p class="dl-desc">Khuôn mẫu soạn đề bài chuẩn Markdown + LaTeX + bảng ví dụ có sẵn <code>&lt;br&gt;</code> để dán vào Admin.</p>
+            </div>
+            <div class="dl-actions">
+              <button class="btn-dl" type="button" onclick="downloadFile('mau-de-bai.md')">⬇ Tải xuống</button>
+              <button class="btn-dl secondary" type="button" onclick="previewFile('mau-de-bai.md')">👁 Xem trước</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. NGÔN NGỮ & SANDBOX -->
       <section class="doc-section" id="ngon-ngu" data-category="all deploy admin user">
-        <h2>2. Danh sách Ngôn ngữ & Môi trường Thực thi</h2>
+        <h2>3. Danh sách Ngôn ngữ &amp; Môi trường Thực thi</h2>
         <p>Hệ thống hỗ trợ biên dịch và chấm tự động các ngôn ngữ lập trình phổ biến thông qua <code>isolate</code>:</p>
         <div class="table-wrap">
           <table>
@@ -632,102 +920,85 @@
         </div>
       </section>
 
-      <!-- 3. SUPABASE -->
+      <!-- 4. SUPABASE -->
       <section class="doc-section" id="deploy-supabase" data-category="deploy">
-        <h2>3. Thiết lập Cơ sở dữ liệu Supabase</h2>
-        <p>Tạo một dự án mới trên <a href="https://supabase.com" target="_blank" rel="noopener">Supabase</a>, mở mục <strong>SQL Editor</strong> và chạy tệp schema tương ứng với mô hình triển khai của bạn:</p>
+        <h2>4. Thiết lập Cơ sở dữ liệu Supabase</h2>
+        <p>Tạo một dự án mới trên <a href="https://supabase.com" target="_blank" rel="noopener">Supabase</a>, mở mục <strong>SQL Editor</strong> và chạy tệp schema tương ứng (tải ở <a href="#kho-tai-xuong">Mục 2</a>):</p>
         <ul>
-          <li><code>actions/schema-actions.sql</code>: Dùng khi chấm bằng GitHub Actions.</li>
-          <li><code>vps/schema-vps.sql</code>: Dùng khi chấm bằng VPS riêng (bổ sung bảng cấu hình đồng bộ và tối ưu hàng đợi).</li>
+          <li><code>schema-actions.sql</code>: Dùng khi chấm bằng GitHub Actions.</li>
+          <li><code>schema-vps.sql</code>: Dùng khi chấm bằng VPS riêng.</li>
         </ul>
         <div class="callout">
           <strong>Lấy khóa API:</strong> Vào <em>Project Settings → API</em> để sao chép <code>Project URL</code>, khóa <code>anon public</code> (dùng cho Frontend) và khóa <code>service_role</code> (chỉ dùng cho Worker chấm bài ở backend).
         </div>
-        <h3>Các bảng dữ liệu cốt lõi</h3>
-        <ul>
-          <li><code>users</code>: Thông tin tài khoản, vai trò (<code>admin</code> / thí sinh).</li>
-          <li><code>problems</code>: Đề bài, giới hạn <code>time_limit_ms</code>, <code>memory_limit_mb</code>, <code>io_mode</code>, <code>io_filename</code>, <code>hide_tests</code>, <code>hide_grading</code>.</li>
-          <li><code>test_cases</code>: Dữ liệu đầu vào (<code>input_data</code>) và đầu ra chuẩn (<code>expected_output</code>) sắp theo <code>test_order</code>.</li>
-          <li><code>contests</code>: Danh sách kỳ thi, thời gian mở/đóng (<code>start_time</code>, <code>end_time</code>) và danh sách thí sinh được phép thi (<code>allowed_users</code>).</li>
-          <li><code>submissions</code>: Hàng đợi bài nộp, mã nguồn, trạng thái chấm và mảng JSON <code>test_results</code>.</li>
-          <li><code>language_templates</code> &amp; <code>system_settings</code>: Lưu code mẫu mặc định cho từng ngôn ngữ.</li>
-        </ul>
       </section>
 
-      <!-- 4. GITHUB ACTIONS -->
+      <!-- 5. GITHUB ACTIONS -->
       <section class="doc-section" id="deploy-actions" data-category="deploy">
-        <h2>4. Triển khai Worker chấm bằng GitHub Actions (Miễn phí)</h2>
-        <p>Phù hợp cho lớp học, luyện tập cá nhân hoặc giải đấu nhỏ mà không cần thuê máy chủ VPS:</p>
+        <h2>5. Triển khai Worker chấm bằng GitHub Actions (Miễn phí)</h2>
         <ol>
-          <li>Tạo repository chứa mã nguồn từ <code>oj-judge-core</code> (hoặc fork về tài khoản của bạn).</li>
-          <li>Sao chép 2 tệp workflow <code>actions/build-vendor.yml</code> và <code>actions/judge.yml</code> vào thư mục <code>.github/workflows/</code>.</li>
-          <li>Vào <strong>Settings → Secrets and variables → Actions</strong> của repository và thêm 2 biến bí mật:
-            <ul>
-              <li><code>SUPABASE_URL</code>: URL dự án Supabase.</li>
-              <li><code>SUPABASE_SERVICE_KEY</code>: Khóa <code>service_role</code> của Supabase.</li>
-            </ul>
-          </li>
+          <li>Tạo repository chứa mã nguồn từ <code>oj-judge-core</code>.</li>
+          <li>Đặt 2 tệp <code>build-vendor.yml</code> và <code>judge.yml</code> (tải ở <a href="#kho-tai-xuong">Mục 2</a>) vào thư mục <code>.github/workflows/</code>.</li>
+          <li>Vào <strong>Settings → Secrets and variables → Actions</strong> và thêm 2 Secrets: <code>SUPABASE_URL</code> và <code>SUPABASE_SERVICE_KEY</code>.</li>
           <li>Chạy workflow <strong>Build Vendor</strong> một lần duy nhất để biên dịch sẵn <code>vendor/bin/judge</code> và <code>vendor/bin/isolate</code>.</li>
-          <li>Workflow <strong>Judge</strong> sẽ tự động chạy theo lịch trình hoặc khi được kích hoạt để chấm toàn bộ các bài <code>Pending</code>.</li>
         </ol>
       </section>
 
-      <!-- 5. VPS WORKER -->
+      <!-- 6. VPS WORKER -->
       <section class="doc-section" id="deploy-vps" data-category="deploy">
-        <h2>5. Triển khai Worker VPS chạy 24/7 (Khuyên dùng cho Kỳ thi)</h2>
-        <p>Để chấm bài tức thì (độ trễ dưới 1 giây) trong các kỳ thi chính thức, hãy triển khai <code>oj-judge-core</code> trên VPS Ubuntu 22.04/24.04:</p>
-
+        <h2>6. Triển khai Worker VPS chạy 24/7 (Khuyên dùng cho Kỳ thi)</h2>
         <h3>Bước 1: Cài đặt trình biên dịch &amp; biên dịch lõi chấm</h3>
         <div class="code-wrap">
           <div class="code-header">
             <span>bash (Ubuntu / Debian)</span>
-            <button class="copy-btn" type="button">Sao chép</button>
+            <div class="code-header-btns">
+              <button class="copy-btn" type="button">Sao chép</button>
+            </div>
           </div>
-          <pre><code>sudo apt update && sudo apt install -y build-essential libcurl4-openssl-dev libcap-dev git python3 openjdk-17-jdk
+          <pre><code>sudo apt update &amp;&amp; sudo apt install -y build-essential libcurl4-openssl-dev libcap-dev git python3 openjdk-17-jdk
 git clone &lt;link-repo-oj-judge-core&gt; /opt/oj-judge
 cd /opt/oj-judge
 g++ -std=c++17 -O2 judge.cpp -lcurl -o vendor/bin/judge
 chmod +x vendor/bin/judge vendor/bin/isolate</code></pre>
         </div>
 
-        <h3>Bước 2: Cấu hình biến môi trường &amp; systemd service</h3>
-        <p>Sử dụng tệp <code>vps/worker-vps.sh</code> và <code>vps/oj-judge.service</code> để đăng ký dịch vụ chạy ngầm tự khởi động cùng hệ thống:</p>
+        <h3>Bước 2: Kích hoạt systemd service</h3>
+        <p>Tải tệp <code>worker-vps.sh</code> và <code>oj-judge.service</code> ở <a href="#kho-tai-xuong">Mục 2</a>, cấu hình URL/Key Supabase rồi kích hoạt:</p>
         <div class="code-wrap">
           <div class="code-header">
             <span>bash</span>
-            <button class="copy-btn" type="button">Sao chép</button>
+            <div class="code-header-btns">
+              <button class="copy-btn" type="button">Sao chép</button>
+            </div>
           </div>
-          <pre><code>sudo cp vps/oj-judge.service /etc/systemd/system/oj-judge.service
+          <pre><code>sudo cp worker-vps.sh /opt/oj-judge/worker-vps.sh
+sudo chmod +x /opt/oj-judge/worker-vps.sh
+sudo cp oj-judge.service /etc/systemd/system/oj-judge.service
 sudo systemctl daemon-reload
 sudo systemctl enable --now oj-judge.service
 sudo systemctl status oj-judge.service</code></pre>
         </div>
-        <div class="callout warn">
-          <strong>Lưu ý quyền cgroup/isolate:</strong> Dịch vụ <code>oj-judge.service</code> cần chạy dưới quyền <code>root</code> để <code>isolate</code> khởi tạo hộp cát (sandbox) và giới hạn bộ nhớ/CPU chính xác cho từng tiến trình.
-        </div>
       </section>
 
-      <!-- 6. VERCEL -->
+      <!-- 7. VERCEL -->
       <section class="doc-section" id="deploy-vercel" data-category="deploy">
-        <h2>6. Triển khai Giao diện Web (<code>oj-web-app</code>) lên Vercel</h2>
+        <h2>7. Triển khai Giao diện Web (<code>oj-web-app</code>) lên Vercel</h2>
         <ol>
           <li>Đẩy mã nguồn <code>oj-web-app</code> lên GitHub.</li>
           <li>Truy cập <a href="https://vercel.com" target="_blank" rel="noopener">Vercel</a>, chọn <strong>Add New Project</strong> và nhập repository <code>oj-web-app</code>.</li>
-          <li>Khai báo 2 biến môi trường (Environment Variables):
-            <ul>
-              <li><code>NEXT_PUBLIC_SUPABASE_URL</code></li>
-              <li><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></li>
-            </ul>
-          </li>
-          <li>Nhấn <strong>Deploy</strong>. Vercel sẽ tự động build ứng dụng Next.js và cấp tên miền HTTPS.</li>
+          <li>Khai báo 2 biến môi trường: <code>NEXT_PUBLIC_SUPABASE_URL</code> và <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> (xem tệp mẫu <code>.env.local.example</code> ở <a href="#kho-tai-xuong">Mục 2</a>).</li>
+          <li>Nhấn <strong>Deploy</strong> để xuất bản trang web.</li>
         </ol>
       </section>
 
-      <!-- 7. ADMIN MARKDOWN + LATEX -->
+      <!-- 8. ADMIN MARKDOWN + LATEX -->
       <section class="doc-section" id="admin-markdown" data-category="admin">
-        <h2>7. Hướng dẫn Soạn đề bài chuẩn Markdown + LaTeX</h2>
+        <h2>
+          <span>8. Hướng dẫn Soạn đề bài chuẩn Markdown + LaTeX</span>
+          <button class="btn-dl" type="button" onclick="downloadFile('mau-de-bai.md')">⬇ Tải mẫu đề bài (.md)</button>
+        </h2>
         <p>
-          Trình hiển thị đề bài của OJ sử dụng bộ render <code>MathText</code> kết hợp <strong>GitHub Flavored Markdown (GFM)</strong> và <strong>KaTeX</strong>. Tác giả đề bài có thể viết tự nhiên như trên GitHub hoặc Codeforces:
+          Trình hiển thị đề bài của OJ sử dụng bộ render <code>MathText</code> kết hợp <strong>GitHub Flavored Markdown (GFM)</strong> và <strong>KaTeX</strong>:
         </p>
 
         <div class="table-wrap">
@@ -761,11 +1032,6 @@ sudo systemctl status oj-judge.service</code></pre>
                 <td>Tự động thụt lề chuẩn</td>
               </tr>
               <tr>
-                <td>Đường kẻ ngang phân cách</td>
-                <td><code>---</code></td>
-                <td>Tạo đường kẻ phân chia phần</td>
-              </tr>
-              <tr>
                 <td>Bảng ví dụ / Subtask</td>
                 <td>
                   <code>| Input | Output |</code><br />
@@ -777,70 +1043,48 @@ sudo systemctl status oj-judge.service</code></pre>
             </tbody>
           </table>
         </div>
-
-        <div class="callout success">
-          <strong>Mẹo trình bày bảng:</strong> Bộ chuẩn hóa của <code>MathText</code> đã tự động xử lý khoảng trống trước bảng và chuyển đổi thẻ <code>&lt;br&gt;</code> thành xuống dòng thật trong ô bảng, giúp trình bày nhiều dòng Input/Output trong một ô cực kỳ gọn gàng.
-        </div>
       </section>
 
-      <!-- 8. ADMIN I/O & TEST CASES -->
+      <!-- 9. ADMIN I/O & TEST CASES -->
       <section class="doc-section" id="admin-io-tests" data-category="admin">
-        <h2>8. Cấu hình Input/Output &amp; Quản lý Test Cases</h2>
-        <h3>Hai chế độ đọc/ghi dữ liệu (<code>io_mode</code>)</h3>
+        <h2>9. Cấu hình Input/Output &amp; Quản lý Test Cases</h2>
         <ul>
           <li><strong>Standard I/O (<code>stdin / stdout</code>):</strong> Thí sinh đọc từ bàn phím chuẩn và in ra màn hình chuẩn.</li>
-          <li><strong>File I/O (<code>file</code>):</strong> Dùng cho các kỳ thi HSG truyền thống. Khi bật chế độ này và nhập <code>io_filename = "BAI1"</code>, trang đề bài sẽ tự hiển thị hộp nhắc nhở thí sinh đọc từ <code>BAI1.in</code> và ghi ra <code>BAI1.out</code>, đồng thời lõi chấm tự động ánh xạ tệp trong sandbox.</li>
-        </ul>
-
-        <h3>Quản lý bộ test &amp; Quyền hiển thị</h3>
-        <ul>
-          <li><strong>Thứ tự test (<code>test_order</code>):</strong> Test có <code>test_order</code> nhỏ nhất sẽ tự động được lấy làm <strong>Ví dụ mẫu</strong> ở cuối trang đề bài (trừ khi bật tùy chọn ẩn test).</li>
-          <li><strong>Ẩn ví dụ/test (<code>hide_tests</code>):</strong> Khi bật, hệ thống không hiển thị khung <em>Ví dụ mẫu</em> lấy từ bảng <code>test_cases</code> (hữu ích khi bạn đã tự kẻ bảng ví dụ bằng Markdown ngay trong phần nội dung đề bài).</li>
-          <li><strong>Lưu trữ test trên Disk (<code>oj-judge-core</code>):</strong> Ngoài test lưu trên Supabase, lõi chấm hỗ trợ cấu trúc thư mục <code>tests/&lt;problem_id&gt;/1.inp</code> và <code>1.out</code>.</li>
+          <li><strong>File I/O (<code>file</code>):</strong> Khi đặt <code>io_mode = 'file'</code> và <code>io_filename = "BAI1"</code>, trang đề bài sẽ tự hiển thị hộp nhắc nhở thí sinh đọc từ <code>BAI1.in</code> và ghi ra <code>BAI1.out</code>.</li>
+          <li><strong>Ví dụ mẫu tự động:</strong> Test có <code>test_order</code> nhỏ nhất sẽ tự động được lấy làm <em>Ví dụ mẫu</em> ở cuối trang đề bài (trừ khi bật <code>hide_tests</code>).</li>
         </ul>
       </section>
 
-      <!-- 9. CONTEST -->
+      <!-- 10. CONTEST -->
       <section class="doc-section" id="admin-contest" data-category="admin">
-        <h2>9. Tổ chức Kỳ thi (Chế độ ICPC &amp; OI)</h2>
-        <p>Trong trang Quản trị (Admin), bạn có thể tạo kỳ thi và gán các bài tập vào kỳ thi thông qua mã <code>contest_id</code>:</p>
+        <h2>10. Tổ chức Kỳ thi (Chế độ ICPC &amp; OI)</h2>
         <ul>
-          <li><strong>Khung thời gian tự động:</strong> Trước <code>start_time</code>, thí sinh vào bài sẽ thấy màn hình khóa kèm đồng hồ đếm ngược <em>Mở sau HH:MM:SS</em>. Sau <code>end_time</code>, bài tự động khóa nộp bài (tài khoản <code>admin</code> luôn được phép xem và nộp thử mọi lúc).</li>
-          <li><strong>Giới hạn danh sách thí sinh (<code>restrict_users</code>):</strong> Khi bật, chỉ những tài khoản có tên nằm trong mảng <code>allowed_users</code> mới truy cập được kỳ thi.</li>
-          <li><strong>Chế độ ẩn điểm OI (<code>hide_grading</code>):</strong> Khi bật tùy chọn này trên bài tập thuộc Contest, thí sinh nộp bài sẽ nhận thông báo <em>"Đã ghi nhận bài nộp"</em> và toàn bộ trạng thái chấm từng test sẽ được giấu kín cho đến khi kỳ thi kết thúc.</li>
+          <li><strong>Khung thời gian tự động:</strong> Trước <code>start_time</code>, thí sinh vào bài sẽ thấy màn hình khóa kèm đồng hồ đếm ngược. Sau <code>end_time</code>, bài tự động khóa nộp bài (tài khoản <code>admin</code> luôn được phép xem và nộp thử mọi lúc).</li>
+          <li><strong>Giới hạn danh sách thí sinh (<code>restrict_users</code>):</strong> Chỉ những tài khoản nằm trong mảng <code>allowed_users</code> mới truy cập được kỳ thi.</li>
+          <li><strong>Chế độ ẩn điểm OI (<code>hide_grading</code>):</strong> Ẩn toàn bộ kết quả chấm từng test trong thời gian diễn ra kỳ thi và tự động công bố khi hết giờ.</li>
         </ul>
       </section>
 
-      <!-- 10. TEMPLATES -->
+      <!-- 11. TEMPLATES -->
       <section class="doc-section" id="admin-templates" data-category="admin">
-        <h2>10. Quản lý Code Mẫu Mặc định (Language Templates)</h2>
-        <p>Khi thí sinh mở trang bài tập hoặc chuyển đổi ngôn ngữ trên Ace Editor, khung soạn thảo sẽ tự nạp đoạn mã khởi đầu tương ứng:</p>
-        <ul>
-          <li>Hệ thống ưu tiên lấy cấu hình từ bảng <code>system_settings</code> (khóa <code>code_templates</code> do Admin chỉnh sửa trực tiếp trên web), sau đó mới lấy từ bảng <code>language_templates</code>.</li>
-          <li>Bạn có thể đặt sẵn khung <code>#include &lt;bits/stdc++.h&gt;</code> và tối ưu <code>ios::sync_with_stdio(false); cin.tie(nullptr);</code> cho C++ để thí sinh tiết kiệm thời gian gõ khuôn mẫu.</li>
-        </ul>
+        <h2>11. Quản lý Code Mẫu Mặc định (Language Templates)</h2>
+        <p>Hệ thống ưu tiên lấy code mẫu từ bảng <code>system_settings</code> (khóa <code>code_templates</code> do Admin chỉnh sửa trực tiếp trên web), sau đó mới lấy từ bảng <code>language_templates</code>.</p>
       </section>
 
-      <!-- 11. USER SUBMIT -->
+      <!-- 12. USER SUBMIT -->
       <section class="doc-section" id="user-submit" data-category="user">
-        <h2>11. Quy trình Làm bài &amp; Nộp bài cho Thí sinh</h2>
+        <h2>12. Quy trình Làm bài &amp; Nộp bài cho Thí sinh</h2>
         <ol>
           <li>Đăng nhập tài khoản ở góc trên bên phải màn hình.</li>
           <li>Mở bài tập từ mục <strong>Bài tập</strong> hoặc từ danh sách bài trong <strong>Kỳ thi (Contests)</strong>.</li>
-          <li>Đọc kỹ phần <strong>Input/Output</strong> trên thanh thông tin bài:
-            <ul>
-              <li>Nếu ghi <code>stdin / stdout</code>: Dùng nhập/xuất chuẩn (<code>cin/cout</code>, <code>input()/print()</code>...).</li>
-              <li>Nếu ghi <code>File: TENBAI.in / TENBAI.out</code>: Bắt buộc mở tệp đúng tên quy định để đọc dữ liệu và ghi kết quả.</li>
-            </ul>
-          </li>
-          <li>Chọn ngôn ngữ lập trình ở khung <strong>Gửi bài giải</strong>, viết code trực tiếp trên Ace Editor (hỗ trợ gợi ý cú pháp tự động) và nhấn <strong>🚀 Nộp bài</strong>.</li>
-          <li>Theo dõi kết quả chấm trực tiếp ngay bên dưới nút nộp bài hoặc bấm <strong>📜 Lịch sử nộp bài</strong> để xem chi tiết từng test.</li>
+          <li>Kiểm tra kỹ mục <strong>Input/Output</strong> (<code>stdin / stdout</code> hay đọc/ghi tệp <code>.in / .out</code>).</li>
+          <li>Chọn ngôn ngữ lập trình, nhập mã nguồn trên Ace Editor và nhấn <strong>🚀 Nộp bài</strong>.</li>
         </ol>
       </section>
 
-      <!-- 12. VERDICTS -->
+      <!-- 13. VERDICTS -->
       <section class="doc-section" id="user-verdicts" data-category="user">
-        <h2>12. Giải thích Các Mã Trạng thái Chấm (Verdicts)</h2>
+        <h2>13. Giải thích Các Mã Trạng thái Chấm (Verdicts)</h2>
         <div class="table-wrap">
           <table>
             <thead>
@@ -859,12 +1103,12 @@ sudo systemctl status oj-judge.service</code></pre>
               <tr>
                 <td><span class="badge b-wa">WA</span></td>
                 <td><strong>Wrong Answer</strong> (Sai kết quả)</td>
-                <td>Kết quả in ra khác đáp án chuẩn. Kiểm tra lại trường hợp biên, tràn số nguyên (dùng <code>long long</code>) hoặc định dạng xuống dòng.</td>
+                <td>Kết quả in ra khác đáp án chuẩn. Kiểm tra trường hợp biên, tràn số (<code>long long</code>) hoặc định dạng xuống dòng.</td>
               </tr>
               <tr>
                 <td><span class="badge b-tle">TLE</span></td>
                 <td><strong>Time Limit Exceeded</strong> (Quá thời gian)</td>
-                <td>Thuật toán chạy chậm hơn <code>time_limit_ms</code>. Cần tối ưu độ phức tạp thuật toán hoặc bật Fast I/O.</td>
+                <td>Thuật toán chạy chậm hơn <code>time_limit_ms</code>. Cần tối ưu độ phức tạp hoặc bật Fast I/O.</td>
               </tr>
               <tr>
                 <td><span class="badge b-mle">MLE</span></td>
@@ -874,12 +1118,12 @@ sudo systemctl status oj-judge.service</code></pre>
               <tr>
                 <td><span class="badge b-re">RE</span></td>
                 <td><strong>Runtime Error</strong> (Lỗi thực thi)</td>
-                <td>Truy cập ngoài chỉ số mảng, chia cho 0, hoặc chương trình trả về mã thoát khác 0.</td>
+                <td>Truy cập ngoài chỉ số mảng, chia cho 0, hoặc trả về mã thoát khác 0.</td>
               </tr>
               <tr>
                 <td><span class="badge b-ce">CE</span></td>
                 <td><strong>Compilation Error</strong> (Lỗi biên dịch)</td>
-                <td>Sai cú pháp ngôn ngữ. Bấm xem chi tiết bài nộp để đọc thông báo lỗi từ trình biên dịch.</td>
+                <td>Sai cú pháp ngôn ngữ. Bấm xem chi tiết bài nộp để đọc thông báo lỗi biên dịch.</td>
               </tr>
               <tr>
                 <td><span class="badge b-g">G</span></td>
@@ -891,19 +1135,361 @@ sudo systemctl status oj-judge.service</code></pre>
         </div>
       </section>
 
-      <!-- 13. CONTEST RULES -->
+      <!-- 14. CONTEST RULES -->
       <section class="doc-section" id="user-contest-rules" data-category="user">
-        <h2>13. Quy chế Thi &amp; Xem Chi tiết Từng Test</h2>
+        <h2>14. Quy chế Thi &amp; Xem Chi tiết Từng Test</h2>
         <ul>
-          <li><strong>Thanh điều hướng nhanh:</strong> Khi làm bài trong một kỳ thi, cột bên phải màn hình hiển thị đồng hồ đếm ngược thời gian còn lại của kỳ thi và danh sách đánh số thứ tự các bài <code>1, 2, 3...</code> để chuyển bài nhanh.</li>
-          <li><strong>Xem chi tiết bài nộp:</strong> Trong trang <strong>Các bài nộp</strong>, nhấn vào nút <em>Chi tiết</em> trên mỗi bài nộp để mở hộp thoại xem từng test case (Input, Expected Output, Actual Output, thời gian chạy và bộ nhớ tiêu thụ của từng test).</li>
-          <li><strong>Chế độ OI:</strong> Nếu kỳ thi áp dụng chế độ ẩn điểm trong giờ thi, kết quả chi tiết từng test sẽ tự động mở khóa ngay sau khi đồng hồ kỳ thi kết thúc.</li>
+          <li><strong>Thanh điều hướng nhanh:</strong> Khi làm bài trong kỳ thi, cột bên phải hiển thị đồng hồ đếm ngược và danh sách đánh số <code>1, 2, 3...</code> để chuyển bài nhanh.</li>
+          <li><strong>Xem chi tiết bài nộp:</strong> Trong trang <strong>Các bài nộp</strong>, nhấn nút <em>Chi tiết</em> trên mỗi bài nộp để xem Input, Expected Output, Actual Output, thời gian và bộ nhớ của từng test.</li>
         </ul>
       </section>
     </main>
   </div>
 
+  <!-- MODAL XEM TRƯỚC TỆP -->
+  <div class="modal-backdrop" id="previewModal" onclick="closePreview()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div class="modal-head">
+        <strong id="previewTitle" style="font-family:monospace;font-size:15px;">filename</strong>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-dl" id="previewDownloadBtn" type="button">⬇ Tải tệp này</button>
+          <button class="btn-icon" type="button" onclick="closePreview()">✕ Đóng</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <pre><code id="previewCode"></code></pre>
+      </div>
+    </div>
+  </div>
+
   <script>
+    // =========================================================================
+    // KHO NỘI DUNG CÁC TỆP CẤU HÌNH & BIỂU MẪU TẢI VỀ TRỰC TIẾP
+    // =========================================================================
+    const DOWNLOADABLE_FILES = {
+      'schema-actions.sql': `-- ==========================================================
+-- SCHEMA SUPABASE CHO ONLINE JUDGE (CHẾ ĐỘ GITHUB ACTIONS)
+-- ==========================================================
+
+CREATE TABLE IF NOT EXISTS public.users (
+  username TEXT PRIMARY KEY,
+  password TEXT NOT NULL,
+  full_name TEXT,
+  role TEXT DEFAULT 'user',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.contests (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT,
+  start_time TIMESTAMPTZ NOT NULL,
+  end_time TIMESTAMPTZ NOT NULL,
+  restrict_users BOOLEAN DEFAULT FALSE,
+  allowed_users TEXT[] DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.problems (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  statement TEXT,
+  time_limit_ms INTEGER DEFAULT 1000,
+  memory_limit_mb INTEGER DEFAULT 256,
+  io_mode TEXT DEFAULT 'stdin',
+  io_filename TEXT DEFAULT '',
+  contest_id TEXT REFERENCES public.contests(id) ON DELETE SET NULL,
+  problem_order INTEGER DEFAULT 0,
+  hide_tests BOOLEAN DEFAULT FALSE,
+  hide_grading BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.test_cases (
+  id BIGSERIAL PRIMARY KEY,
+  problem_id TEXT REFERENCES public.problems(id) ON DELETE CASCADE,
+  test_order INTEGER DEFAULT 1,
+  input_data TEXT NOT NULL,
+  expected_output TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public.submissions (
+  id BIGSERIAL PRIMARY KEY,
+  problem_id TEXT REFERENCES public.problems(id) ON DELETE CASCADE,
+  username TEXT NOT NULL,
+  language TEXT NOT NULL,
+  source_code TEXT NOT NULL,
+  status TEXT DEFAULT 'Pending',
+  verdict TEXT,
+  exec_time_ms INTEGER DEFAULT 0,
+  memory_kb INTEGER DEFAULT 0,
+  compile_message TEXT,
+  test_results JSONB DEFAULT '[]'::jsonb,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.language_templates (
+  id SERIAL PRIMARY KEY,
+  language TEXT UNIQUE NOT NULL,
+  display_name TEXT NOT NULL,
+  template_code TEXT DEFAULT ''
+);
+
+CREATE TABLE IF NOT EXISTS public.system_settings (
+  key TEXT PRIMARY KEY,
+  value JSONB NOT NULL
+);
+
+-- Tài khoản Admin mặc định (hãy đổi mật khẩu ngay sau khi đăng nhập)
+INSERT INTO public.users (username, password, full_name, role)
+VALUES ('admin', 'admin123', 'Quản trị viên', 'admin')
+ON CONFLICT (username) DO NOTHING;`,
+
+      'schema-vps.sql': `-- ==========================================================
+-- SCHEMA SUPABASE CHO ONLINE JUDGE (CHẾ ĐỘ VPS WORKER 24/7)
+-- ==========================================================
+
+CREATE TABLE IF NOT EXISTS public.users (
+  username TEXT PRIMARY KEY,
+  password TEXT NOT NULL,
+  full_name TEXT,
+  role TEXT DEFAULT 'user',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.contests (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT,
+  start_time TIMESTAMPTZ NOT NULL,
+  end_time TIMESTAMPTZ NOT NULL,
+  restrict_users BOOLEAN DEFAULT FALSE,
+  allowed_users TEXT[] DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.problems (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  statement TEXT,
+  time_limit_ms INTEGER DEFAULT 1000,
+  memory_limit_mb INTEGER DEFAULT 256,
+  io_mode TEXT DEFAULT 'stdin',
+  io_filename TEXT DEFAULT '',
+  contest_id TEXT REFERENCES public.contests(id) ON DELETE SET NULL,
+  problem_order INTEGER DEFAULT 0,
+  hide_tests BOOLEAN DEFAULT FALSE,
+  hide_grading BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.test_cases (
+  id BIGSERIAL PRIMARY KEY,
+  problem_id TEXT REFERENCES public.problems(id) ON DELETE CASCADE,
+  test_order INTEGER DEFAULT 1,
+  input_data TEXT NOT NULL,
+  expected_output TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public.submissions (
+  id BIGSERIAL PRIMARY KEY,
+  problem_id TEXT REFERENCES public.problems(id) ON DELETE CASCADE,
+  username TEXT NOT NULL,
+  language TEXT NOT NULL,
+  source_code TEXT NOT NULL,
+  status TEXT DEFAULT 'Pending',
+  verdict TEXT,
+  exec_time_ms INTEGER DEFAULT 0,
+  memory_kb INTEGER DEFAULT 0,
+  compile_message TEXT,
+  test_results JSONB DEFAULT '[]'::jsonb,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_submissions_status ON public.submissions(status, created_at);
+
+CREATE TABLE IF NOT EXISTS public.language_templates (
+  id SERIAL PRIMARY KEY,
+  language TEXT UNIQUE NOT NULL,
+  display_name TEXT NOT NULL,
+  template_code TEXT DEFAULT ''
+);
+
+CREATE TABLE IF NOT EXISTS public.system_settings (
+  key TEXT PRIMARY KEY,
+  value JSONB NOT NULL
+);
+
+INSERT INTO public.users (username, password, full_name, role)
+VALUES ('admin', 'admin123', 'Quản trị viên', 'admin')
+ON CONFLICT (username) DO NOTHING;`,
+
+      'build-vendor.yml': `name: Build Judge & Isolate Vendor
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libcurl4-openssl-dev libcap-dev git
+
+      - name: Build isolate sandbox
+        run: |
+          git clone https://github.com/ioi/isolate.git /tmp/isolate
+          make -C /tmp/isolate isolate isolate-check-environment
+          mkdir -p vendor/bin vendor/etc
+          cp /tmp/isolate/isolate /tmp/isolate/isolate-check-environment vendor/bin/
+          cp /tmp/isolate/default.cf vendor/etc/isolate
+
+      - name: Compile judge.cpp
+        run: |
+          g++ -std=c++17 -O2 judge.cpp -lcurl -o vendor/bin/judge
+          chmod +x vendor/bin/judge vendor/bin/isolate
+
+      - name: Commit vendor binaries
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add vendor/
+          git commit -m "Build vendor binaries (judge & isolate)" || echo "No changes"
+          git push`,
+
+      'judge.yml': `name: OJ Auto Judge Worker
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  judge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install runtime compilers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ python3 openjdk-17-jdk fp-compiler libcurl4 libcap2
+
+      - name: Setup isolate permissions
+        run: |
+          sudo mkdir -p /usr/local/etc /var/local/lib/isolate
+          sudo cp vendor/etc/isolate /usr/local/etc/isolate
+          sudo chown root:root vendor/bin/isolate
+          sudo chmod 4755 vendor/bin/isolate
+          chmod +x vendor/bin/judge
+
+      - name: Run Judge Core
+        env:
+          SUPABASE_URL: \${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: \${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          ./vendor/bin/judge`,
+
+      'worker-vps.sh': `#!/usr/bin/env bash
+set -euo pipefail
+
+cd /opt/oj-judge
+
+# Điền thông tin Supabase của bạn tại đây
+export SUPABASE_URL="https://YOUR_PROJECT_ID.supabase.co"
+export SUPABASE_SERVICE_KEY="YOUR_SUPABASE_SERVICE_ROLE_KEY"
+
+echo "[OJ-Worker] Starting continuous judging loop..."
+while true; do
+  ./vendor/bin/judge || true
+  sleep 1
+done`,
+
+      'oj-judge.service': `[Unit]
+Description=Online Judge C++ Isolate Worker Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/oj-judge
+ExecStart=/opt/oj-judge/worker-vps.sh
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target`,
+
+      '.env.local.example': `# Cấu hình kết nối Supabase cho oj-web-app (Next.js)
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_ID.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_PUBLIC_KEY`,
+
+      'mau-de-bai.md': `**Đề bài:**
+Cho một số nguyên dương $N$ ($1 \\le N \\le 10^9$) và dãy gồm $N$ số nguyên $a_1, a_2, \\dots, a_N$. Hãy tính tổng các phần tử trong dãy:
+$$S = \\sum_{i=1}^{N} a_i$$
+
+**Dữ liệu vào (Standard Input):**
+* Dòng đầu tiên chứa số nguyên dương $N$ ($1 \\le N \\le 10^5$).
+* Dòng thứ hai chứa $N$ số nguyên $a_1, a_2, \\dots, a_N$ ($|a_i| \\le 10^9$).
+
+**Kết quả (Standard Output):**
+* In ra một số nguyên duy nhất là tổng $S$ tìm được.
+
+---
+
+**Ví dụ:**
+
+| Input | Output |
+| :--- | :--- |
+| \`5\`<br>\`1 2 3 4 5\` | \`15\` |
+| \`3\`<br>\`-10 20 -5\` | \`5\` |`
+    };
+
+    // Hàm tải 1 tệp qua Blob
+    function downloadFile(filename) {
+      const content = DOWNLOADABLE_FILES[filename];
+      if (!content) return;
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // Hàm tải hàng loạt gói tệp
+    function downloadBundle(group) {
+      const files =
+        group === 'actions'
+          ? ['schema-actions.sql', 'build-vendor.yml', 'judge.yml']
+          : ['schema-vps.sql', 'worker-vps.sh', 'oj-judge.service'];
+      files.forEach((f, idx) => {
+        setTimeout(() => downloadFile(f), idx * 250);
+      });
+    }
+
+    // Modal xem trước tệp
+    function previewFile(filename) {
+      const content = DOWNLOADABLE_FILES[filename] || '';
+      document.getElementById('previewTitle').textContent = filename;
+      document.getElementById('previewCode').textContent = content;
+      document.getElementById('previewDownloadBtn').onclick = () => downloadFile(filename);
+      document.getElementById('previewModal').classList.add('open');
+    }
+
+    function closePreview() {
+      document.getElementById('previewModal').classList.remove('open');
+    }
+
     // 1. Dark / Light Theme
     const themeToggle = document.getElementById('themeToggle');
     const savedTheme = localStorage.getItem('oj_docs_theme');
